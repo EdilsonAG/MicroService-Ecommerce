@@ -6,17 +6,58 @@
     "@cap-js-community/odata-v2-adapter": "^1.15.12",
     "@cap-js/postgres": "^2.3.0",
     "@sap/cds": "^9.9.1",
+    "@sap/xssec": "^4.13.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "cookie": "^1.1.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
     "express": "^4",
+    "jose": "^6.2.3",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.21.0"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^2",
+    "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.9.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   },
   "scripts": {
-    "start": "cds-serve"
+    "start": "cds watch",
+    "dev": "cds watch --profile dev",
+    "build": "tsc",
+    "deploy": "cds deploy",
+    "test": "jest"
   },
-  "private": true
+  "private": true,
+  "cds": {
+    "requires": {
+      "api-docs": true,
+      "auth": {
+        "kind": "dummy"
+      },
+      "db": {
+        "kind": "postgres",
+        "impl": "@cap-js/postgres",
+        "migrate": true,
+        "credentials": {
+          "host": "localhost",
+          "port": 5432,
+          "user": "postgres",
+          "password": "postgres123",
+          "database": "bancoeccomerce"
+        }
+      }
+    },
+    "migrations": {
+      "db": {
+        "tenant": {
+          "prefix": "cds_migrations"
+        }
+      }
+    }
+  }
 }
