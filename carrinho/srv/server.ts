@@ -1,11 +1,10 @@
 // server.ts
 import { readFileSync } from 'fs'
 import { Request, Response, NextFunction } from 'express'
-import cds from '@sap/cds'
-
+const cds = require('@sap/cds');
 require('dotenv').config();
 
-const publicKeyPem = readFileSync('./keys/algafood-pkey', 'utf8')
+const publicKeyPem = readFileSync('./keys/algafood-pkey.pem', 'utf8')
 
 function parseCookies(cookie: string): Record<string, string> {
     return Object.fromEntries(
@@ -19,8 +18,12 @@ function parseCookies(cookie: string): Record<string, string> {
 }
 
 async function jwt_auth(req: Request, res: Response, next: NextFunction) {
+    console.log("\n\n")
+    console.log("ESTA NO MIWARE")
+    console.log("\n\n")
     const token = parseCookies(req.headers.cookie || '')['access_token']
 
+    console.log(token)
     if (!token) return res.status(401).send('Unauthorized')
 
     try {
