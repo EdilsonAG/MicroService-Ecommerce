@@ -2,26 +2,40 @@ version: "3.9"
 
 networks:
   ecomerce-network:
-    drivar: bridge
+    driver: bridge
 
-service:
+services:
 
   ecomerce-mysql:
     image: mysql
-  enviroment:
-    MYSQL_ROOT_PASSWORD: "Ed.183729"
-  ports:
-    - "3306:3306"
-  networks:
-    - "ecomerce-network"
+    environment:
+      MYSQL_ROOT_PASSWORD: "Ed.183729"
+    ports:
+      - "3307:3306"
+    networks:
+      - "ecomerce-network"
 
 
   ecomerce-auth:
-    buid: ./auth/demo/demo
+    build: ./auth/demo/demo
     image: ecomerce-auth
-    enviroment:
+    environment:
       DB_HOST: ecomerce-mysql
       PROFILE: docker
     ports:
       - "8080:8080"
+    networks:
+      - ecomerce-network
+    depends_on:
+      - ecomerce-mysql
+
+  ecomerce-proxy:
+    build: .
+    image: ecomerce-proxy
+    ports:
+      - "80:80"
+    networks:
+      - ecomerce-network
+    depends_on:
+      - ecomerce-auth
     
