@@ -13,8 +13,13 @@ services:
     ports:
       - "3307:3306"
     networks:
-      - "ecomerce-network"
-
+      - ecomerce-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pEd.183729"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   ecomerce-auth:
     build: ./auth/demo/demo
@@ -27,7 +32,8 @@ services:
     networks:
       - ecomerce-network
     depends_on:
-      - ecomerce-mysql
+      ecomerce-mysql:
+        condition: service_healthy   
 
   ecomerce-proxy:
     build: .
@@ -37,5 +43,5 @@ services:
     networks:
       - ecomerce-network
     depends_on:
-      - ecomerce-auth
-    
+      ecomerce-auth:
+        condition: service_started
