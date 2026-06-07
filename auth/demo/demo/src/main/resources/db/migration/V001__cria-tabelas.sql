@@ -1,15 +1,15 @@
 CREATE TABLE cliente_entity(
     id bigint not null auto_increment,
-    nome varchar(40),
-    email varchar(40),
-    senha varchar(20),
+    nome varchar(80),
+    email varchar(80),
+    senha varchar(255),
     
     primary key (id)
 );
 
 create table grupo (
 	id bigint not null auto_increment,
-	nome varchar(60) not null,
+	descricao varchar(60) not null,
 	
 	primary key (id)
 ) engine=InnoDB default charset=utf8mb4;

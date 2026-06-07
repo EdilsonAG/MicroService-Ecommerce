@@ -59,7 +59,7 @@ private JwtDecoder jwtDecoder;
             UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(
                     loginRequest.email(),
                     loginRequest.password());
-
+                System.out.println(userAndPass);
             Authentication authentication = authenticationManager.authenticate(userAndPass);
 
         
