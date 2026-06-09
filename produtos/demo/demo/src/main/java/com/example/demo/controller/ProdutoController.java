@@ -9,15 +9,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.service.model.Produto;
+import com.example.demo.service.service.ProdutoService;
 
 @RestController
 @RequestMapping("/produto")
 public class ProdutoController {
     
+    private ProdutoService produtoService;
+
+    public ProdutoController(ProdutoService produtoService){
+        this.produtoService = produtoService;
+    }
+
     @GetMapping
     public List<Produto> listarProduto(){
-        System.out.println("deu boa galera");
-        return new ArrayList<Produto>();
+        return produtoService.listarProdutos();
     }
 
     @PostMapping
