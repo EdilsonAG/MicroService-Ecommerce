@@ -3,6 +3,8 @@ package com.example.demo.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.service.entity.ProdutoEntity;
@@ -32,6 +34,27 @@ public class ProdutoRepository {
         });
 
         return produtos;
+
+    }
+
+    public Produto salvar(Produto produto) {
+        ProdutoEntity produtoEntity = new ProdutoEntity();
+        produtoEntity.setDescricao(produto.getDescricao());
+        produtoEntity.setNome(produto.getNome());
+        ProdutoEntity produtoEntitySalvo = new ProdutoEntity();
+        try {
+
+             produtoEntitySalvo = produtoRepositoryJPA.save(produtoEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Produto produtoSalvo = new Produto();
+        produtoSalvo.setId(produtoEntitySalvo.getId());
+        produtoSalvo.setDescricao(produtoEntitySalvo.getDescricao());
+        produtoSalvo.setNome(produtoEntitySalvo.getNome());
+
+        return produtoSalvo;
 
     }
 }

@@ -1,5 +1,8 @@
 package com.example.demo.service.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +16,9 @@ public class ProdutoEntity {
     private Long id;
     private String nome;
     private String descricao;
-    
+
+
+  
     public Long getId() {
         return id;
     }
