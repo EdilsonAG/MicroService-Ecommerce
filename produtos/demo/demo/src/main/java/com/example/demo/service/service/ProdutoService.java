@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.repository.ProdutoRepository;
 import com.example.demo.service.model.FotoProduto;
+import com.example.demo.service.model.NovaFoto;
 import com.example.demo.service.model.Produto;
 import com.example.demo.service.strategy.storage.StrategyStorage;
 
@@ -34,9 +35,13 @@ public class ProdutoService {
 
         Produto produto = produtoRepository.salvar(produtoRequests);
 
-        List<FotoProduto> fotoProdutos = new ArrayList<>();
+        NovaFoto novaFoto = new NovaFoto();
+        novaFoto.setProduto(produto);
+        novaFoto.setFiles(files);
 
-        strategyStorage.armazenar(null, null);
+        strategyStorage.armazenar("Local", novaFoto);
+
+        return produto;
     }
 
 }

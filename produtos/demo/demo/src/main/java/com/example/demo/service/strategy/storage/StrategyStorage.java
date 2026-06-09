@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
+
+import com.example.demo.service.model.FotoProduto;
+import com.example.demo.service.model.NovaFoto;
  
 
 @Component
@@ -21,13 +24,13 @@ public class StrategyStorage {
     }
 
     // nomeArquivo agora é passado corretamente
-    public FotoRecuperada recuperar(String storage, String nomeArquivo) {
-        FotoStorage fotoStorage = fotoStorageMap.get(storage);
-        return fotoStorage.recuperar(nomeArquivo);
-    }
+    // public FotoRecuperada recuperar(String storage, String nomeArquivo) {
+    //     FotoStorage fotoStorage = fotoStorageMap.get(storage);
+    //     return fotoStorage.recuperar(nomeArquivo);
+    // }
 
-    public List<String> listar(String storage) {
-        FotoStorage fotoStorage = fotoStorageMap.get(storage);
-        return fotoStorage.listar();
-    }
+    // public List<String> listar(String storage) {
+    //     FotoStorage fotoStorage = fotoStorageMap.get(storage);
+    //     return fotoStorage.listar();
+    // }
 }
