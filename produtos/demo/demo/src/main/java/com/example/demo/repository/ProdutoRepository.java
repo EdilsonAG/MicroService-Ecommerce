@@ -41,14 +41,10 @@ public class ProdutoRepository {
         ProdutoEntity produtoEntity = new ProdutoEntity();
         produtoEntity.setDescricao(produto.getDescricao());
         produtoEntity.setNome(produto.getNome());
-        ProdutoEntity produtoEntitySalvo = new ProdutoEntity();
-        try {
-
-             produtoEntitySalvo = produtoRepositoryJPA.save(produtoEntity);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+         
+        
+            ProdutoEntity produtoEntitySalvo = produtoRepositoryJPA.save(produtoEntity);
+        
         Produto produtoSalvo = new Produto();
         produtoSalvo.setId(produtoEntitySalvo.getId());
         produtoSalvo.setDescricao(produtoEntitySalvo.getDescricao());

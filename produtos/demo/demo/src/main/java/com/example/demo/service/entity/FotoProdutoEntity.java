@@ -1,6 +1,6 @@
 package com.example.demo.service.entity;
 
-import org.springframework.data.annotation.Id;
+ 
 
 import com.example.demo.service.model.Produto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
@@ -19,11 +20,18 @@ public class FotoProdutoEntity {
     private Long id;
 
     private String url;
-
-    @JsonIgnore
+ 
     @ManyToOne
     @JoinColumn(name = "id_produto")
-    private Produto produto;
+    private ProdutoEntity produto;
+
+    public ProdutoEntity getProduto() {
+        return produto;
+    }
+
+    public void setProduto(ProdutoEntity produto) {
+        this.produto = produto;
+    }
 
     public Long getId() {
         return id;
@@ -41,11 +49,5 @@ public class FotoProdutoEntity {
         this.url = url;
     }
 
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
-    }
+  
 }

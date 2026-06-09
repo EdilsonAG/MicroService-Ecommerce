@@ -32,10 +32,10 @@ public class LocalStorage implements FotoStorage {
 
     @Override
     public void armazenar(NovaFoto foto) {
-        Path arquivoPath = getArquivoPath(foto.getProduto().getNome());
-
+        
         for (MultipartFile file : foto.getFiles()) {
             try {
+                Path arquivoPath = getArquivoPath(file.getOriginalFilename());
                 FileCopyUtils.copy(file.getInputStream(), Files.newOutputStream(arquivoPath));
             } catch (Exception e) {
                 e.printStackTrace();

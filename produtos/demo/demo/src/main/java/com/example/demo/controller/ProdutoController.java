@@ -31,7 +31,7 @@ public class ProdutoController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Produto criarProduto(@RequestPart("files") List<MultipartFile> files,
-    @RequestPart("produto") Produto produtoRequests){
-        return produtoService.criarProduto(produtoRequests, files);
+    @RequestPart("produtoRequests") Produto produtoRequests){
+        return produtoService.cadastrarProduto(produtoRequests, files);
     }
 }
