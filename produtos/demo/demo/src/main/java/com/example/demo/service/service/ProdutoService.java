@@ -30,6 +30,11 @@ public class ProdutoService {
         return produtoRepository.listarProdutos();
     }
 
+
+    public Produto produtoById(Long id){
+        return produtoRepository.produtoById(id);
+    }
+
     public Produto cadastrarProduto(Produto produtoRequests,List<MultipartFile> files){
 
 

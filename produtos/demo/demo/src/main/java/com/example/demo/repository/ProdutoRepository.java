@@ -20,6 +20,15 @@ public class ProdutoRepository {
         this.produtoRepositoryJPA = produtoRepositoryJPA;
     }
 
+    public Produto produtoById(Long id){
+        ProdutoEntity produtoEntity = produtoRepositoryJPA.findById(id).orElseThrow( ()->{ throw new IllegalArgumentException(); });
+        Produto produto = new Produto();
+        produto.setId(produtoEntity.getId());
+        produto.setDescricao(produtoEntity.getDescricao());
+        produto.setNome(produtoEntity.getNome());
+        return produto;
+    }
+
     public List<Produto> listarProdutos() {
         List<ProdutoEntity> produtosEntities = produtoRepositoryJPA.findAll();
 

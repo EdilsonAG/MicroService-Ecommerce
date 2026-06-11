@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -29,9 +30,14 @@ public class ProdutoController {
         return produtoService.listarProdutos();
     }
 
+    @GetMapping("/{id}")
+    public Produto produtoById(@PathVariable Long id){
+        return produtoService.produtoById(id);
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Produto criarProduto(@RequestPart("files") List<MultipartFile> files,
     @RequestPart("produtoRequests") Produto produtoRequests){
         return produtoService.cadastrarProduto(produtoRequests, files);
-    }
+    } 
 }
