@@ -33,6 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.demo.security.domain.model.User;
+import com.example.demo.security.domain.service.AuthService;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,8 +48,19 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-@Autowired
-private JwtDecoder jwtDecoder;
+    @Autowired
+    private JwtDecoder jwtDecoder;
+
+    @Autowired
+    private AuthService authService;
+
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registrar(@RequestBody DadosUserDTO.RegisterRequest registerRequest){
+       
+        authService.registrarUsuario(registerRequest);
+        return null;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest,
@@ -61,7 +75,6 @@ private JwtDecoder jwtDecoder;
                     loginRequest.password());
                 System.out.println(userAndPass);
             Authentication authentication = authenticationManager.authenticate(userAndPass);
-
         
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
             securityContext.setAuthentication(authentication);

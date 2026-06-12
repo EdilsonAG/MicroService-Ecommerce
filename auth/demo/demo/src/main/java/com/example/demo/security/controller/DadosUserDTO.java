@@ -1,0 +1,9 @@
+package com.example.demo.security.controller;
+
+public class DadosUserDTO {
+    
+    public record LoginRequest(String email, String password) {}
+
+    public record RegisterRequest(String email, String pass, String name){}
+
+}

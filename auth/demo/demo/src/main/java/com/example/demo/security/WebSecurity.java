@@ -27,6 +27,7 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
         .authorizeHttpRequests( authorize -> authorize
                .requestMatchers("/auth/validate").permitAll() // nginx chama internamente
                .requestMatchers("/auth/login").permitAll()  
+               .requestMatchers("/auth/register").permitAll()  
             .anyRequest().authenticated()
         )
          .formLogin(Customizer.withDefaults());
