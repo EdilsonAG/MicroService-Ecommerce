@@ -1,4 +1,12 @@
+import { CarService } from "../domain/service/CarService";
+
 export class CarController{
+
+    private carService:CarService;
+
+    constructor(carService:CarService){
+        this.carService = carService;
+    }
 
     registerHandlers(srv: any): void {
         srv.on('CREATE', 'Carrinho', async (req: any) => {
@@ -6,7 +14,7 @@ export class CarController{
                 // chamar use case
                 console.log("\n\n\n dados: "+req.data)
                 //const id = await this.createProductUseCase.createProduct(req.data);
-                return { ID: id, ...req.data };
+                //return { ID: id, ...req.data };
             } catch (error: any) {
                 req.error(400, error.message)
             }
