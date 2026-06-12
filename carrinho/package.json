@@ -15,6 +15,7 @@
     "express": "^4",
     "jose": "^6.2.3",
     "jsonwebtoken": "^9.0.3",
+    "kafkajs": "^2.2.4",
     "pg": "^8.21.0"
   },
   "devDependencies": {
