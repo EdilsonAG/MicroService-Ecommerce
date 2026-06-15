@@ -140,4 +140,5 @@ services:
     depends_on:
       ecomerce-auth:
         condition: service_started
-  
+      ecomerce-produto:
+        condition: service_started
