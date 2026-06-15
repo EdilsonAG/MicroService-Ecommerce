@@ -58,8 +58,14 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registrar(@RequestBody DadosUserDTO.RegisterRequest registerRequest){
        
-        authService.registrarUsuario(registerRequest);
-        return null;
+        try {
+            authService.registrarUsuario(registerRequest);
+            System.out.println("chegou pra registrar");
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            throw new IllegalAccessError();
+        }
+        
     }
 
     @PostMapping("/login")
