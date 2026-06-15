@@ -15,24 +15,37 @@ services:
 
 
   ecomerce-kafka:
-    image: confluentinc/cp-kafka:7.6.0
+    image: apache/kafka:3.7.0
     container_name: ecomerce-kafka
+    hostname: ecomerce-kafka
+
     ports:
       - "9092:9092"
+      - "9093:9093"
+
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+      - ./chavekeystoredev/kafka.jks:/etc/kafka/certs/kafka.jks
+
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@ecomerce-kafka:9093
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,INTERNAL://ecomerce-kafka:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@ecomerce-kafka:9094
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+
+      KAFKA_LISTENERS: SSL://0.0.0.0:9093,EXTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: SSL://ecomerce-kafka:9093,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL,EXTERNAL:SSL,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL
+
+      KAFKA_SSL_KEYSTORE_LOCATION: /etc/kafka/certs/kafka.jks
+      KAFKA_SSL_KEYSTORE_PASSWORD: "123456"
+      KAFKA_SSL_KEY_PASSWORD: "123456"
+      KAFKA_SSL_CLIENT_AUTH: "none"
+
     networks:
       - ecomerce-network
-
  
 
   ecomerce-mysql-produto:
@@ -106,4 +119,5 @@ services:
       ecomerce-auth:
         condition: service_started
   
- 
+volumes:
+  kafka-data:
