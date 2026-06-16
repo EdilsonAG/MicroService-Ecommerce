@@ -3,7 +3,7 @@ import { readFileSync } from 'fs'
 import { Request, Response, NextFunction } from 'express'
 import { startConsumer } from './module/carrinho/domain/service/CarServiceKafka';
 const cds = require('@sap/cds');
-require('dotenv').config();
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'local'}` });
 
 const publicKeyPem = readFileSync('./keys/algafood-pkey.pem', 'utf8')
 
