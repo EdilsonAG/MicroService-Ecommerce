@@ -14,6 +14,8 @@ services:
       - ecomerce-network
 
 
+  # apenas com PLAINTEXT sem segurança nenhuma
+
   # =======================
   # imagem do kafka funciona
   # ecomerce-kafka:
@@ -36,6 +38,46 @@ services:
   #     - ecomerce-network
   # =======================
 
+
+  #===============
+  # SASL_PLAINTEXT vem com segurança porem não criptografada
+  # ecomerce-kafka:
+  #   image: confluentinc/cp-kafka:7.6.0
+  #   container_name: ecomerce-kafka
+  #   ports:
+  #     - "9092:9092"
+  #   environment:
+  #     KAFKA_NODE_ID: 1
+  #     KAFKA_PROCESS_ROLES: broker,controller
+  #     KAFKA_CONTROLLER_QUORUM_VOTERS: 1@ecomerce-kafka:9093
+
+  #   # Listeners: externo com SASL, interno sem (Spring dentro do Docker usa INTERNAL)
+  #     KAFKA_LISTENERS: SASL_PLAINTEXT://0.0.0.0:9092,INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
+  #     KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://localhost:9092,INTERNAL://ecomerce-kafka:29092
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SASL_PLAINTEXT:SASL_PLAINTEXT,INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+  #     KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #     CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+
+  #   # SASL config
+  #     KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+  #     KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+
+  #   # Usuário e senha (admin:admin123 — troque)
+  #     KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+
+  #   volumes:
+  #     - ./kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf
+
+  #   networks:
+  #     - ecomerce-network
+
+  #===============
+
+
+  # eis a perfeição junto com o chavekeystoredev2 criei um SALS_SSL criptografado pronto para produção
   ecomerce-kafka:
     image: confluentinc/cp-kafka:7.6.0
     container_name: ecomerce-kafka
@@ -46,29 +88,34 @@ services:
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@ecomerce-kafka:9093
 
-    # Listeners: externo com SASL, interno sem (Spring dentro do Docker usa INTERNAL)
-      KAFKA_LISTENERS: SASL_PLAINTEXT://0.0.0.0:9092,INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://localhost:9092,INTERNAL://ecomerce-kafka:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SASL_PLAINTEXT:SASL_PLAINTEXT,INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_LISTENERS: SASL_SSL://0.0.0.0:9092,INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: SASL_SSL://localhost:9092,INTERNAL://ecomerce-kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SASL_SSL:SASL_SSL,INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: ""
 
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
 
-    # SASL config
       KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
 
-    # Usuário e senha (admin:admin123 — troque)
+      KAFKA_SSL_KEYSTORE_FILENAME: kafka.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: key_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: kafka.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: keystore_creds
+      KAFKA_SSL_CLIENT_AUTH: none
+  
       KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
 
     volumes:
       - ./kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf
+      - ./chavekeystoredev2:/etc/kafka/secrets
 
     networks:
       - ecomerce-network
-
 
   ecomerce-mysql-produto:
     image: mysql
@@ -112,6 +159,8 @@ services:
       - "8080:8080"
     networks:
       - ecomerce-network
+    volumes:
+      - ./chavekeystoredev2:/etc/kafka/secrets 
     depends_on:
       ecomerce-mysql-auth:
         condition: service_healthy   
