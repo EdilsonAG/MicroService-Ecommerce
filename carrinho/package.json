@@ -13,6 +13,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^4",
+    "ioredis": "^5.11.1",
     "jose": "^6.2.3",
     "jsonwebtoken": "^9.0.3",
     "kafkajs": "^2.2.4",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@cap-js/sqlite": "^2",
     "@types/bcrypt": "^6.0.0",
+    "@types/ioredis": "^4.28.10",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.9.1",
     "ts-node": "^10.9.2",
@@ -42,7 +44,7 @@
         "kind": "dummy"
       },
       "db": {
-        "[production]": {
+        "[docker]": {
           "kind": "postgres",
           "impl": "@cap-js/postgres",
           "migrate": true,
