@@ -1,0 +1,14 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install --production
+
+COPY . .
+
+EXPOSE 4004
+
+#ENV NODE_ENV=docker
+
+CMD ["npx", "cds", "serve", "--production"]

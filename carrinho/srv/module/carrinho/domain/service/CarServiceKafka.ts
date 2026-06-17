@@ -1,6 +1,10 @@
 import { Kafka, SASLOptions } from 'kafkajs';
 import { readFileSync } from 'fs';
 import { ClienteEntity } from '../model/ClienteEntity';
+import { Carrinho } from '../model/Carrinho';
+import { CarRepository } from '../../repository/CarRepository';
+import cds from '@sap/cds';
+
 
 
 // const kafka = new Kafka({
@@ -21,26 +25,28 @@ import { ClienteEntity } from '../model/ClienteEntity';
 
 
 export async function startConsumer() {
-  
-const isSSL = process.env.KAFKA_PROTOCOL === 'SASL_SSL';
 
-const kafka = new Kafka({
-  clientId: 'cap-app',
-  brokers: [process.env.KAFKA_BROKERS!],
-  ssl: isSSL ? {
-    rejectUnauthorized: process.env.KAFKA_REJECT_UNAUTHORIZED === 'true',
-    ca: process.env.KAFKA_CERT_PATH
-      ? [readFileSync(process.env.KAFKA_CERT_PATH)]
-      : undefined
-  } : false,
-  sasl: isSSL ? {
-    mechanism: 'plain',
-    username: process.env.KAFKA_USERNAME!,
-    password: process.env.KAFKA_PASSWORD!
-  } as SASLOptions : undefined
-});
+  const isSSL = process.env.KAFKA_PROTOCOL === 'SASL_SSL';
 
-const consumer = kafka.consumer({ groupId: 'cap-group' });
+  const carRepository = new CarRepository();
+
+  const kafka = new Kafka({
+    clientId: 'cap-app',
+    brokers: [process.env.KAFKA_BROKERS!],
+    ssl: isSSL ? {
+      rejectUnauthorized: process.env.KAFKA_REJECT_UNAUTHORIZED === 'true',
+      ca: process.env.KAFKA_CERT_PATH
+        ? [readFileSync(process.env.KAFKA_CERT_PATH)]
+        : undefined
+    } : false,
+    sasl: isSSL ? {
+      mechanism: 'plain',
+      username: process.env.KAFKA_USERNAME!,
+      password: process.env.KAFKA_PASSWORD!
+    } as SASLOptions : undefined
+  });
+
+  const consumer = kafka.consumer({ groupId: 'cap-group' });
   await consumer.connect();
   await consumer.subscribe({ topic: 'user.created', fromBeginning: false });
 
@@ -48,8 +54,54 @@ const consumer = kafka.consumer({ groupId: 'cap-group' });
     eachMessage: async ({ message }) => {
       if (!message.value) return;
 
-      const data: ClienteEntity = JSON.parse(message.value.toString());
-      console.log('Cliente recebido:', data.nome, data.email);
+      const user: ClienteEntity = JSON.parse(message.value.toString());
+      console.log('Cliente recebido:', user.nome, user.email);
+
+
+      try {
+        await cds.tx(async (tx) => {
+          if (user.id === undefined) {
+            throw new Error("Usuário nao existente")
+          }
+
+          const carrinhoEncontrado: Carrinho = await carRepository.findByUserId(tx, user.id)
+
+          if (carrinhoEncontrado) {
+            throw new Error("Carrinho já existe");
+          }
+
+          
+          // Verifica se já existe carrinho para esse usuário
+          // const existing = await tx.run(
+          //   SELECT.one.from('Carrinhos').where({ user_id: user.id })
+          // );
+
+          // if (existing) {
+          //   console.warn(`Carrinho já existe para usuário ${user.id}, ignorando.`);
+          //   return;
+          // }
+
+
+        });
+      } catch (err) {
+        console.error('Erro ao processar mensagem Kafka:', err);
+        // Aqui você decide: deixar o Kafka retentar ou enviar pra DLQ
+        throw err; // lança → Kafka vai retentar conforme sua config
+      }
     }
   });
+
+  // await consumer.run({
+  //   eachMessage: async ({ message }) => {
+  //     if (!message.value) return;
+
+  //     const user: ClienteEntity = JSON.parse(message.value.toString());
+  //     console.log('Cliente recebido:', user.nome, user.email);
+
+  //     const carrinho = new Carrinho()
+  //     carrinho.user = user
+  //     carRepository.createCarrinho(carrinho);
+  //   }
+  // })
+  ;
 }
