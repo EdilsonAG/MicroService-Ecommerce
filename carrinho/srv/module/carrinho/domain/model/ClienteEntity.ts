@@ -1,5 +1,5 @@
 export class ClienteEntity{
-    private _id: number | undefined;
+    private _id: string | undefined;
     private _nome: string | undefined;
     private _email: string | undefined;
     public get email(): string | undefined {
@@ -16,10 +16,10 @@ export class ClienteEntity{
         this._nome = value;
     }
 
-    public get id(): number | undefined{
+    public get id(): string | undefined{
         return this._id;
     }
-    public set id(value: number) {
+    public set id(value: string) {
         this._id = value;
     }
     
