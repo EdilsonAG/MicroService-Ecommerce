@@ -42,22 +42,35 @@
         "kind": "dummy"
       },
       "db": {
-        "kind": "postgres",
-        "impl": "@cap-js/postgres",
-        "migrate": true,
-        "credentials": {
-          "host": "localhost",
-          "port": 5432,
-          "user": "postgres",
-          "password": "postgres123",
-          "database": "bancoeccomerce"
+        "[production]": {
+          "kind": "postgres",
+          "impl": "@cap-js/postgres",
+          "migrate": true,
+          "credentials": {
+            "host": "localhost",
+            "port": 5432,
+            "user": "postgres",
+            "password": "postgres123",
+            "database": "bancoeccomerce"
+          }
+        },
+        "[development]": {
+          "kind": "postgres",
+          "impl": "@cap-js/postgres",
+          "credentials": {
+            "host": "localhost",
+            "port": 5432,
+            "user": "postgres",
+            "password": "postgres123",
+            "database": "bancoeccomerce"
+          }
         }
-      }
-    },
-    "migrations": {
-      "db": {
-        "tenant": {
-          "prefix": "cds_migrations"
+      },
+      "migrations": {
+        "db": {
+          "tenant": {
+            "prefix": "cds_migrations"
+          }
         }
       }
     }

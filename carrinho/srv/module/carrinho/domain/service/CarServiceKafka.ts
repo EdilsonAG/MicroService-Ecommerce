@@ -57,6 +57,8 @@ export async function startConsumer() {
       const user: ClienteEntity = JSON.parse(message.value.toString());
       console.log('Cliente recebido:', user.nome, user.email);
 
+      const carrinho = new Carrinho()
+      carrinho.user = user;
 
       try {
         await cds.tx(async (tx) => {
@@ -64,13 +66,17 @@ export async function startConsumer() {
             throw new Error("Usuário nao existente")
           }
 
+          console.log("antes de encontrar")
           const carrinhoEncontrado: Carrinho = await carRepository.findByUserId(tx, user.id)
+          console.log("depois de encontrar")
 
           if (carrinhoEncontrado) {
             throw new Error("Carrinho já existe");
           }
 
-          
+          console.log("antes de salvar no banco")
+           await carRepository.createCarrinho2(tx,carrinho)
+          console.log("salvo no banco")
           // Verifica se já existe carrinho para esse usuário
           // const existing = await tx.run(
           //   SELECT.one.from('Carrinhos').where({ user_id: user.id })
