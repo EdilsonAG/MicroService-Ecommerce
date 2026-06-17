@@ -34,9 +34,11 @@ export class CarRepository {
     return carrinho;
 }
 
-    async createCarrinho2(tx: cds.Transaction, userId: string) {
+    async createCarrinho2(tx: cds.Transaction, carrinho: Carrinho) {
         return tx.run(
-            cds.ql.INSERT.into('Carrinhos').entries({ user_id: userId })
+            cds.ql.INSERT.into('app.Carrinho').entries({ 
+                user_id: carrinho.user?.id 
+            })
         );
     }
 
