@@ -5,11 +5,11 @@ export class RedisClient {
 
   public static getInstance(): Redis {
     if (!RedisClient.instance) {
-        
+
       RedisClient.instance = new Redis({
         host: process.env.REDIS_HOST || 'localhost',
-        port: Number(process.env.REDIS_PORT) || 6379,
-        password: process.env.REDIS_PASSWORD || undefined,
+        port: Number(process.env.REDIS_PORT) || 6380,
+        password: process.env.REDIS_PASSWORD || 'Ed.183729',
       });
     }
     return RedisClient.instance;
