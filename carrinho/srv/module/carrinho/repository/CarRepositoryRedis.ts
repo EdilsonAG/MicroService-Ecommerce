@@ -1,10 +1,10 @@
 
-import Redis from 'ioredis';
-import { Carrinho } from '../domain/model/Carrinho';
+ import { Carrinho } from '../domain/model/Carrinho';
 import { RedisClient } from '../infra/redis/redisClient';
 import { ItemCarrinho } from '../domain/model/ItemCarrinho';
+import { CarRepository } from '../interface/repository/CarRepository';
 
-export class CarRepository {
+export class CarRepositoryRedis implements CarRepository{
 
     private key(userId: string) {
         return `carrinho:${userId}`;
@@ -93,11 +93,10 @@ export class CarRepository {
         const redis = RedisClient.getInstance();
         const TTL = 60 * 60 * 24 * 7;
 
-        // dado principal
         await redis.set(`carrinho:${carrinhoId}`, JSON.stringify(payload));
         await redis.expire(`carrinho:${carrinhoId}`, TTL);
 
-        // índice userId → carrinhoId
+     
         await redis.set(`user-carrinho:${car.user.id}`, carrinhoId);
         await redis.expire(`user-carrinho:${car.user.id}`, TTL);
     }
