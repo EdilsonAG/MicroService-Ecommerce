@@ -179,19 +179,44 @@ services:
       ecomerce-mysql-produto:
         condition: service_healthy 
 
-  ecomerce-carrinho:
-    build: ./produtos/demo/demo
-    image: ecomerce-produto
-    environment:
-      DB_HOST: ecomerce-mysql-produto
-      PROFILE: docker
+
+  ecomerce-redis-carrinho:
+    image: redis:7
+    command: redis-server --requirepass Ed.183729
     ports:
-      - "8081:8081"
+      - "6380:6379"
+    networks:
+      - ecomerce-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+
+  ecomerce-carrinho:
+    build: ./carrinho
+    image: ecomerce-carrinho
+    environment:
+      KAFKA_BROKERS: ecomerce-kafka:29092
+      KAFKA_PROTOCOL: PLAINTEXT
+      KAFKA_USERNAME:
+      KAFKA_PASSWORD:
+      KAFKA_REJECT_UNAUTHORIZED: "true"
+      KAFKA_CERT_PATH:
+      REDIS_HOST: ecomerce-redis-carrinho
+      REDIS_PASSWORD: Ed.183729
+      REDIS_PORT: "6379"
+    ports:
+      - "4004:4004"
     networks:
       - ecomerce-network
     depends_on:
-      ecomerce-mysql-produto:
+      ecomerce-redis-carrinho:
         condition: service_healthy 
+      ecomerce-kafka:
+        condition: service_started
 
   ecomerce-proxy:
     build: .
@@ -204,4 +229,6 @@ services:
       ecomerce-auth:
         condition: service_started
       ecomerce-produto:
+        condition: service_started
+      comerce-carrinho:
         condition: service_started
