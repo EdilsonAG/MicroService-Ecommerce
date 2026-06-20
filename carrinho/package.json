@@ -41,7 +41,10 @@
     "requires": {
       "api-docs": true,
       "auth": {
-        "kind": "dummy"
+        "kind": "dummy",
+        "[production]": {
+          "kind": "dummy"
+        }
       },
       "db": {
         "[docker]": {

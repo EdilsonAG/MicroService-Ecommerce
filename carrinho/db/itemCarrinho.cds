@@ -3,7 +3,7 @@
 namespace app;
 using { cuid, managed } from '@sap/cds/common';
  using { app.Product } from './product';
-using { app.Carrinho } from './Carrinho';  
+using { app.Carrinho } from './carrinho';  
 
 
 
