@@ -56,10 +56,9 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-
     @PostMapping("/register")
-    public ResponseEntity<?> registrar(@RequestBody DadosUserDTO.RegisterRequest registerRequest){
-       
+    public ResponseEntity<?> registrar(@RequestBody DadosUserDTO.RegisterRequest registerRequest) {
+
         try {
             authService.registrarUsuario(registerRequest);
             System.out.println("chegou pra registrar");
@@ -67,7 +66,7 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email ja cadastrado");
         }
-        
+
     }
 
     @PostMapping("/login")
@@ -81,16 +80,15 @@ public class AuthController {
             UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(
                     loginRequest.email(),
                     loginRequest.password());
-                System.out.println(userAndPass);
+            System.out.println(userAndPass);
             Authentication authentication = authenticationManager.authenticate(userAndPass);
-        
+
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
             securityContext.setAuthentication(authentication);
             SecurityContextHolder.setContext(securityContext);
 
             new HttpSessionSecurityContextRepository()
                     .saveContext(securityContext, request, response);
-           
 
             // System.out.println("HTTPS SESSEION SECURITY CRIADA");
 
@@ -144,65 +142,80 @@ public class AuthController {
 
         System.out.println("DEPOIS de fazer o post para pegar o token");
         String accessToken = (String) tokenResponse.getBody().get("access_token");
+        String refreshToken = (String) tokenResponse.getBody().get("refresh_token");
 
-        // Seta o cookie HttpOnly — JS não consegue ler!
+        HttpSession session2 = request.getSession(true);
+        session.setAttribute("access_token", accessToken);
+        session.setAttribute("refresh_token", refreshToken);
+        session.setMaxInactiveInterval(299);
 
-        // altass.cookies.cookie.secure
-        ResponseCookie cookie = ResponseCookie.from("access_token", accessToken)
-                .httpOnly(true)
-                .secure(true) // true em produção
-                .path("/")
-                .maxAge(299)
-                .sameSite("Lax") // ← isso resolve o campo vazio
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-
-        // HttpSession session = request.getSession(true);
-        // session.setAttribute("access_token", accessToken);
-
-        // ResponseCookie clearSession = ResponseCookie.from("ECCOMERCESESSION", "")
+        // ==============é oque funciona====================
+        // ResponseCookie cookie = ResponseCookie.from("access_token", accessToken)
         // .httpOnly(true)
-        // .secure(true)
+        // .secure(true) // true em produção
         // .path("/")
-        // .maxAge(0) // expira imediatamente
-        // .sameSite("Lax")
+        // .maxAge(299)
+        // .sameSite("Lax") // ← isso resolve o campo vazio
         // .build();
-        // response.addHeader(HttpHeaders.SET_COOKIE, clearSession.toString());
+
+        // response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        // =================================
 
         return ResponseEntity.ok().build();
     }
 
+    // provavelmente auqi vou implemnetar um refresh token
+    // @GetMapping("/validate")
+    // public ResponseEntity<?> validate(HttpServletRequest request) {
+    // // pega o cookie access_token
+    // Cookie[] cookies = request.getCookies();
+    // if (cookies == null)
+    // return ResponseEntity.status(401).build();
+
+    // String token = Arrays.stream(cookies)
+    // .filter(c -> c.getName().equals("access_token"))
+    // .map(Cookie::getValue)
+    // .findFirst()
+    // .orElse(null);
+
+    // if (token == null)
+    // return ResponseEntity.status(401).build();
+
+    // try {
+    // jwtDecoder.decode(token); // já existe no seu AuthorizationServerConfigJWT
+    // return ResponseEntity.ok().build();
+    // } catch (Exception e) {
+    // return ResponseEntity.status(401).build();
+    // }
+    // }
+
     @GetMapping("/validate")
     public ResponseEntity<?> validate(HttpServletRequest request) {
-        // pega o cookie access_token
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null)
+        HttpSession session = request.getSession(false);
+        if (session == null)
             return ResponseEntity.status(401).build();
 
-        String token = Arrays.stream(cookies)
-                .filter(c -> c.getName().equals("access_token"))
-                .map(Cookie::getValue)
-                .findFirst()
-                .orElse(null);
-
+        String token = (String) session.getAttribute("access_token");
         if (token == null)
             return ResponseEntity.status(401).build();
 
         try {
-            jwtDecoder.decode(token); // já existe no seu AuthorizationServerConfigJWT
-            return ResponseEntity.ok().build();
+            jwtDecoder.decode(token);
+            return ResponseEntity.ok()
+                    .header("X-Access-Token", token)  
+                    .build();
         } catch (Exception e) {
             return ResponseEntity.status(401).build();
         }
     }
 
     @GetMapping("/session")
-public ResponseEntity<?> session(HttpServletRequest request) {
-    HttpSession session = request.getSession(false);
-    if (session == null) return ResponseEntity.status(401).body("sem sessão");
-    
-    Object ctx = session.getAttribute("SPRING_SECURITY_CONTEXT");
-    return ResponseEntity.ok(ctx.toString());
-}
+    public ResponseEntity<?> session(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null)
+            return ResponseEntity.status(401).body("sem sessão");
+
+        Object ctx = session.getAttribute("SPRING_SECURITY_CONTEXT");
+        return ResponseEntity.ok(ctx.toString());
+    }
 }
