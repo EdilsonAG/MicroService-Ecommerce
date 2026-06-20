@@ -9,7 +9,7 @@ export class CarController{
     }
 
     registerHandlers(srv: any): void {
-        srv.on('CREATE', 'Carrinho', async (req: any) => {
+        srv.on('READ', 'Carrinho', async (req: any) => {
             try {
                 // chamar use case
                 console.log("\n\n\n dados: "+req.data)
