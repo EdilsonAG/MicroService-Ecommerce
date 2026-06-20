@@ -32,6 +32,7 @@ export async function startConsumer() {
   const carRepository = new CarRepositoryPostgres();
   const carRepositoryRedis = new CarRepositoryRedis();
 
+ 
   const kafka = new Kafka({
     clientId: 'cap-app',
     brokers: [process.env.KAFKA_BROKERS!],
@@ -47,6 +48,10 @@ export async function startConsumer() {
       password: process.env.KAFKA_PASSWORD!
     } as SASLOptions : undefined
   });
+
+  try {
+    
+ 
 
   const consumer = kafka.consumer({ groupId: 'cap-group' });
   await consumer.connect();
@@ -68,6 +73,7 @@ export async function startConsumer() {
 
       await carRepositoryRedis.createCarrinho(carrinho);
     }
+    
     // eachMessage: async ({ message }) => {
     //   if (!message.value) return;
 
@@ -122,7 +128,10 @@ export async function startConsumer() {
     // }
     //  }
   });
-
+} catch (error) {
+    console.error('Kafka indisponível, tentando novamente em 10s...', error);
+    setTimeout(startConsumer, 10000);
+  }
   // await consumer.run({
   //   eachMessage: async ({ message }) => {
   //     if (!message.value) return;

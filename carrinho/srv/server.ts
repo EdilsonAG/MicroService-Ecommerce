@@ -3,9 +3,13 @@ import { readFileSync } from 'fs'
 import { Request, Response, NextFunction } from 'express'
 import { startConsumer } from './module/carrinho/domain/service/CarServiceKafka';
 const cds = require('@sap/cds');
+import path from 'path'
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'local'}` });
 
-const publicKeyPem = readFileSync('./keys/algafood-pkey.pem', 'utf8')
+const publicKeyPem = readFileSync(
+  path.join(__dirname, 'keys', 'algafood-pkey.pem'),
+  'utf8'
+)
 
 function parseCookies(cookie: string): Record<string, string> {
     return Object.fromEntries(

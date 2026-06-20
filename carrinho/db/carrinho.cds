@@ -2,7 +2,7 @@
 namespace app;
 using { cuid, managed } from '@sap/cds/common';
 using { app.User } from './user';
- using { app.ItemCarrinho } from './ItemCarrinho'; 
+ using { app.ItemCarrinho } from './itemCarrinho'; 
 
 entity Carrinho {
     key id          : UUID;

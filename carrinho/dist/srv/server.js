@@ -1,11 +1,15 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // server.ts
 const fs_1 = require("fs");
 const CarServiceKafka_1 = require("./module/carrinho/domain/service/CarServiceKafka");
 const cds = require('@sap/cds');
+const path_1 = __importDefault(require("path"));
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'local'}` });
-const publicKeyPem = (0, fs_1.readFileSync)('./keys/algafood-pkey.pem', 'utf8');
+const publicKeyPem = (0, fs_1.readFileSync)(path_1.default.join(__dirname, 'keys', 'algafood-pkey.pem'), 'utf8');
 function parseCookies(cookie) {
     return Object.fromEntries((cookie || '').split('; ')
         .filter(Boolean)
