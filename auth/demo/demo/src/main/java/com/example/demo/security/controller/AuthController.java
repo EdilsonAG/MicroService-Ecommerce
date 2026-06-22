@@ -237,6 +237,7 @@ public class AuthController {
 
     @GetMapping("/validate")
     public ResponseEntity<?> validate(HttpServletRequest request) {
+        System.out.println("chegou pra validar");
         HttpSession session = request.getSession(false);
         if (session == null)
             return ResponseEntity.status(401).build();
