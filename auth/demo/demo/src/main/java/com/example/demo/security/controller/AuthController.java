@@ -148,10 +148,14 @@ public class AuthController {
 
         System.out.println("DEPOIS de fazer o post para pegar o token");
         String accessToken = (String) tokenResponse.getBody().get("access_token");
-       // String refreshToken = (String) tokenResponse.getBody().get("refresh_token");
+       String refreshToken = (String) tokenResponse.getBody().get("refresh_token");
 
+       System.out.println("RefreshTOKEN \n\n\n");
+       System.out.println(refreshToken);
         HttpSession session2 = request.getSession(true);
         session2.setAttribute("access_token", accessToken);
+        session2.setAttribute("refresh_token", refreshToken);
+
         System.out.println("nova sessao criada");
         System.out.println(session2.getId());
         System.out.println(session2.getAttributeNames());
@@ -221,6 +225,7 @@ public class AuthController {
             return ResponseEntity.status(401).build();
 
         String token = (String) session.getAttribute("access_token");
+        String refresh = (String) session.getAttribute("refresh_token");
         if (token == null)
             return ResponseEntity.status(401).build();
 
