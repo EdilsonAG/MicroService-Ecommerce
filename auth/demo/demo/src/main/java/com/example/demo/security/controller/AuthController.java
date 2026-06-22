@@ -89,11 +89,11 @@ public class AuthController {
             SecurityContextHolder.setContext(securityContext);
 
             HttpSessionSecurityContextRepository asdf = new HttpSessionSecurityContextRepository();
-                    asdf.saveContext(securityContext, request, response);
-                asdf.toString();
+            asdf.saveContext(securityContext, request, response);
+            asdf.toString();
             // System.out.println("HTTPS SESSEION SECURITY CRIADA");
-           HttpSession session = request.getSession(false);
-        System.out.println("sessao:"+ session.getId());
+            HttpSession session = request.getSession(false);
+            System.out.println("sessao:" + session.getId());
             return ResponseEntity.ok().build();
 
         } catch (BadCredentialsException e) {
@@ -108,7 +108,6 @@ public class AuthController {
             @RequestParam String codeVerifier, HttpServletRequest request,
             HttpServletResponse response) {
 
-        
         HttpSession session = request.getSession(false);
         System.out.println("sessao:");
         System.out.println(session.getId());
@@ -148,10 +147,10 @@ public class AuthController {
 
         System.out.println("DEPOIS de fazer o post para pegar o token");
         String accessToken = (String) tokenResponse.getBody().get("access_token");
-       String refreshToken = (String) tokenResponse.getBody().get("refresh_token");
+        String refreshToken = (String) tokenResponse.getBody().get("refresh_token");
 
-       System.out.println("RefreshTOKEN \n\n\n");
-       System.out.println(refreshToken);
+        System.out.println("RefreshTOKEN \n\n\n");
+        System.out.println(refreshToken);
         HttpSession session2 = request.getSession(true);
         session2.setAttribute("access_token", accessToken);
         session2.setAttribute("refresh_token", refreshToken);
@@ -161,9 +160,8 @@ public class AuthController {
         System.out.println(session2.getAttributeNames());
         System.out.println(session2.getServletContext().getContextPath());
         System.out.println(session2.getServletContext().getServerInfo());
-        //session.setAttribute("refresh_token", refreshToken);
+        // session.setAttribute("refresh_token", refreshToken);
         session2.setMaxInactiveInterval(299);
-
 
         String token = (String) session2.getAttribute("access_token");
 
@@ -171,12 +169,9 @@ public class AuthController {
         Cookie co[] = request.getCookies();
 
         Collections.list(session2.getAttributeNames())
-        .forEach(name ->
-            System.out.println(
-                name + " = " +
-                session2.getAttribute(name)
-            )
-        );
+                .forEach(name -> System.out.println(
+                        name + " = " +
+                                session2.getAttribute(name)));
 
         // ==============é oque funciona====================
         // ResponseCookie cookie = ResponseCookie.from("access_token", accessToken)
@@ -218,6 +213,28 @@ public class AuthController {
     // }
     // }
 
+    // @GetMapping("/validate")
+    // public ResponseEntity<?> validate(HttpServletRequest request) {
+    // HttpSession session = request.getSession(false);
+    // if (session == null)
+    // return ResponseEntity.status(401).build();
+
+    // String token = (String) session.getAttribute("access_token");
+    // String refresh = (String) session.getAttribute("refresh_token");
+    // if (token == null)
+    // return ResponseEntity.status(401).build();
+
+    // try {
+
+    // jwtDecoder.decode(token);
+    // return ResponseEntity.ok()
+    // .header("X-Access-Token", token)
+    // .build();
+    // } catch (Exception e) {
+    // return ResponseEntity.status(401).build();
+    // }
+    // }
+
     @GetMapping("/validate")
     public ResponseEntity<?> validate(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -225,17 +242,49 @@ public class AuthController {
             return ResponseEntity.status(401).build();
 
         String token = (String) session.getAttribute("access_token");
-        String refresh = (String) session.getAttribute("refresh_token");
         if (token == null)
             return ResponseEntity.status(401).build();
 
         try {
-            jwtDecoder.decode(token);
+            jwtDecoder.decode(token); // válido, retorna normalmente
             return ResponseEntity.ok()
-                    .header("X-Access-Token", token)  
+                    .header("X-Access-Token", token)
                     .build();
         } catch (Exception e) {
-            return ResponseEntity.status(401).build();
+            // token expirado → tenta refresh
+            String refreshToken = (String) session.getAttribute("refresh_token");
+            if (refreshToken == null)
+                return ResponseEntity.status(401).build();
+
+            try {
+                // chama o Authorization Server para renovar
+                RestTemplate restTemplate = new RestTemplate();
+                MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+                params.add("grant_type", "refresh_token");
+                params.add("refresh_token", refreshToken);
+                params.add("client_id", "web");
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                headers.setBasicAuth("web", "web1234");
+
+                ResponseEntity<Map> response = restTemplate.postForEntity(
+                        "http://localhost:8080/oauth2/token",
+                        new HttpEntity<>(params, headers),
+                        Map.class);
+
+                String newAccessToken = (String) response.getBody().get("access_token");
+                String newRefreshToken = (String) response.getBody().get("refresh_token");
+
+                session.setAttribute("access_token", newAccessToken);
+                session.setAttribute("refresh_token", newRefreshToken);
+
+                return ResponseEntity.ok()
+                        .header("X-Access-Token", newAccessToken)
+                        .build();
+            } catch (Exception ex) {
+                return ResponseEntity.status(401).build();
+            }
         }
     }
 
