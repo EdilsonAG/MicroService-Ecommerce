@@ -1,6 +1,7 @@
 package com.example.demo.security.controller;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,11 +88,12 @@ public class AuthController {
             securityContext.setAuthentication(authentication);
             SecurityContextHolder.setContext(securityContext);
 
-            new HttpSessionSecurityContextRepository()
-                    .saveContext(securityContext, request, response);
-
+            HttpSessionSecurityContextRepository asdf = new HttpSessionSecurityContextRepository();
+                    asdf.saveContext(securityContext, request, response);
+                asdf.toString();
             // System.out.println("HTTPS SESSEION SECURITY CRIADA");
-
+           HttpSession session = request.getSession(false);
+        System.out.println("sessao:"+ session.getId());
             return ResponseEntity.ok().build();
 
         } catch (BadCredentialsException e) {
@@ -106,9 +108,13 @@ public class AuthController {
             @RequestParam String codeVerifier, HttpServletRequest request,
             HttpServletResponse response) {
 
+        
         HttpSession session = request.getSession(false);
+        System.out.println("sessao:");
+        System.out.println(session.getId());
         if (session != null) {
             try {
+                System.out.println("sessao foi invalidada");
                 session.invalidate();
             } catch (IllegalStateException ignored) {
                 // já estava invalidated pelo Authorization Server, tudo bem
@@ -142,12 +148,31 @@ public class AuthController {
 
         System.out.println("DEPOIS de fazer o post para pegar o token");
         String accessToken = (String) tokenResponse.getBody().get("access_token");
-        String refreshToken = (String) tokenResponse.getBody().get("refresh_token");
+       // String refreshToken = (String) tokenResponse.getBody().get("refresh_token");
 
         HttpSession session2 = request.getSession(true);
-        session.setAttribute("access_token", accessToken);
-        session.setAttribute("refresh_token", refreshToken);
-        session.setMaxInactiveInterval(299);
+        session2.setAttribute("access_token", accessToken);
+        System.out.println("nova sessao criada");
+        System.out.println(session2.getId());
+        System.out.println(session2.getAttributeNames());
+        System.out.println(session2.getServletContext().getContextPath());
+        System.out.println(session2.getServletContext().getServerInfo());
+        //session.setAttribute("refresh_token", refreshToken);
+        session2.setMaxInactiveInterval(299);
+
+
+        String token = (String) session2.getAttribute("access_token");
+
+        System.out.println(token);
+        Cookie co[] = request.getCookies();
+
+        Collections.list(session2.getAttributeNames())
+        .forEach(name ->
+            System.out.println(
+                name + " = " +
+                session2.getAttribute(name)
+            )
+        );
 
         // ==============é oque funciona====================
         // ResponseCookie cookie = ResponseCookie.from("access_token", accessToken)
