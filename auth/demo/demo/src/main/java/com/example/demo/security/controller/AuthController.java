@@ -247,19 +247,26 @@ public class AuthController {
             return ResponseEntity.status(401).build();
 
         try {
+
             jwtDecoder.decode(token); // válido, retorna normalmente
+            System.out.println("token valido dentro try\n\n\n");
+            System.out.println(token);
+            System.out.println("\n\n\n");
             return ResponseEntity.ok()
                     .header("X-Access-Token", token)
                     .build();
         } catch (Exception e) {
             // token expirado → tenta refresh
             String refreshToken = (String) session.getAttribute("refresh_token");
+            System.out.println("refreshtoken\n\n\n");
+            System.out.println(refreshToken);
             if (refreshToken == null)
                 return ResponseEntity.status(401).build();
 
             try {
                 // chama o Authorization Server para renovar
                 RestTemplate restTemplate = new RestTemplate();
+
                 MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
                 params.add("grant_type", "refresh_token");
                 params.add("refresh_token", refreshToken);
@@ -277,6 +284,11 @@ public class AuthController {
                 String newAccessToken = (String) response.getBody().get("access_token");
                 String newRefreshToken = (String) response.getBody().get("refresh_token");
 
+                System.out.println("new accestoken\n\n");
+                System.out.println(newAccessToken);
+                System.out.println("newRefreshToken\n\n");
+                System.out.println(newRefreshToken);
+                    
                 session.setAttribute("access_token", newAccessToken);
                 session.setAttribute("refresh_token", newRefreshToken);
 
