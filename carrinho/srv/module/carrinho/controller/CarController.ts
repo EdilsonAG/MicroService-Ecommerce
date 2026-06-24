@@ -12,14 +12,25 @@ export class CarController{
         srv.on('READ', 'Carrinho', async (req: any) => {
             try {
                 // chamar use case
-                console.log("\n\n\n dados: "+req.data)
+                console.log("\n\n\n dados: "+req)
+                
                 //const id = await this.createProductUseCase.createProduct(req.data);
                 //return { ID: id, ...req.data };
             } catch (error: any) {
                 req.error(400, error.message)
             }
         })
+
+       srv.on('CREATE', 'Carrinho', async(req:any) => {
+            try {
+                
+            } catch (error) {
+                
+            }
+       })
     }
+
+    
 
 
 }
