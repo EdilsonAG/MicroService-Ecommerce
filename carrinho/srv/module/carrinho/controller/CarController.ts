@@ -23,7 +23,8 @@ export class CarController{
 
        srv.on('CREATE', 'Carrinho', async(req:any) => {
             try {
-                
+                 const authHeader = req.headers.authorization?.replace('Bearer ', '')
+    console.log(authHeader)
             } catch (error) {
                 
             }
