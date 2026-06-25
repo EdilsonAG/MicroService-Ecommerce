@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -248,6 +249,7 @@ public class AuthController {
 
         try {
 
+            System.out.println("antes de validar");
             jwtDecoder.decode(token); // válido, retorna normalmente
             System.out.println("token valido dentro try\n\n\n");
             System.out.println(token);
@@ -255,7 +257,7 @@ public class AuthController {
             return ResponseEntity.ok()
                     .header("X-Access-Token", token)
                     .build();
-        } catch (Exception e) {
+        } catch (JwtException e) {
             // token expirado → tenta refresh
             String refreshToken = (String) session.getAttribute("refresh_token");
             System.out.println("refreshtoken\n\n\n");
