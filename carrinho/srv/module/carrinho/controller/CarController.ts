@@ -29,11 +29,13 @@ export class CarController {
                 console.log("CREATE CARRINHO")
                 const authHeader = req.headers.authorization?.replace('Bearer ', '')
                 const decoded = await jwt.decode(authHeader);
-                console.log("ele não esta imprimindo aqui")
-
                 const idUser = decoded.id
+                const idProduto:string = req.produto
                 console.log("token")
                 console.log(authHeader)
+
+                this.carService.addItemCarrinho(idUser,idProduto)
+
             } catch (error) {
 
             }
