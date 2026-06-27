@@ -3,6 +3,7 @@
 import { RedisClient } from '../infra/redis/redisClient';
 import { ItemCarrinho } from '../domain/model/ItemCarrinho';
 import { CarRepository } from '../interface/repository/CarRepository';
+import { Product } from '../domain/model/Product';
 
 export class CarRepositoryRedis implements CarRepository{
 
@@ -128,5 +129,12 @@ export class CarRepositoryRedis implements CarRepository{
         const TTL = 60 * 60 * 24 * 7;
         await redis.set(`carrinho:${carrinhoId}`, JSON.stringify(carrinho));
         await redis.expire(`carrinho:${carrinhoId}`, TTL);
+    }
+
+    async popularProduto(produto:Product):Promise<void>{
+
+        const redis = RedisClient.getInstance()
+
+        redis.get
     }
 }
