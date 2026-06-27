@@ -1,7 +1,7 @@
 // server.ts
 import { readFileSync } from 'fs'
 import { Request, Response, NextFunction } from 'express'
-import { startConsumer } from './module/carrinho/domain/service/CarServiceKafka';
+import {  startConsumerUser } from './module/carrinho/domain/service/CarServiceKafkaUser';
 const cds = require('@sap/cds');
 import path from 'path'
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'local'}` });
@@ -52,5 +52,5 @@ async function jwt_auth(req: Request, res: Response, next: NextFunction) {
 
 cds.on('bootstrap', (app) => {
     app.use('/odata', jwt_auth)
-    startConsumer();
+    startConsumerUser();
 })

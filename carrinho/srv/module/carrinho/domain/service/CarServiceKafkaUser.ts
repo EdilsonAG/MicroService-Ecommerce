@@ -1,10 +1,9 @@
-import { Kafka, SASLOptions } from 'kafkajs';
-import { readFileSync } from 'fs';
 import { ClienteEntity } from '../model/ClienteEntity';
 import { Carrinho } from '../model/Carrinho';
 import { CarRepositoryPostgres } from '../../repository/CarRepositoryPostgres';
 import cds from '@sap/cds';
 import { CarRepositoryRedis } from '../../repository/CarRepositoryRedis';
+import { KafkaClient } from '../../infra/kafka/KafkaClient';
 
 
 
@@ -25,33 +24,18 @@ import { CarRepositoryRedis } from '../../repository/CarRepositoryRedis';
 // });
 
 
-export async function startConsumer() {
+export async function startConsumerUser() {
 
-  const isSSL = process.env.KAFKA_PROTOCOL === 'SASL_SSL';
 
   const carRepository = new CarRepositoryPostgres();
   const carRepositoryRedis = new CarRepositoryRedis();
 
  
-  const kafka = new Kafka({
-    clientId: 'cap-app',
-    brokers: [process.env.KAFKA_BROKERS!],
-    ssl: isSSL ? {
-      rejectUnauthorized: process.env.KAFKA_REJECT_UNAUTHORIZED === 'true',
-      ca: process.env.KAFKA_CERT_PATH
-        ? [readFileSync(process.env.KAFKA_CERT_PATH)]
-        : undefined
-    } : false,
-    sasl: isSSL ? {
-      mechanism: 'plain',
-      username: process.env.KAFKA_USERNAME!,
-      password: process.env.KAFKA_PASSWORD!
-    } as SASLOptions : undefined
-  });
+
 
   try {
     
- 
+    const kafka = KafkaClient.getInstace()
 
   const consumer = kafka.consumer({ groupId: 'cap-group' });
   await consumer.connect();
@@ -130,7 +114,7 @@ export async function startConsumer() {
   });
 } catch (error) {
     console.error('Kafka indisponível, tentando novamente em 10s...', error);
-    setTimeout(startConsumer, 10000);
+    setTimeout(startConsumerUser, 10000);
   }
   // await consumer.run({
   //   eachMessage: async ({ message }) => {
