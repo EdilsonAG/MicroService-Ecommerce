@@ -30,89 +30,89 @@ export async function startConsumerUser() {
   const carRepository = new CarRepositoryPostgres();
   const carRepositoryRedis = new CarRepositoryRedis();
 
- 
+
 
 
   try {
-    
+
     const kafka = KafkaClient.getInstace()
 
-  const consumer = kafka.consumer({ groupId: 'cap-group' });
-  await consumer.connect();
-  await consumer.subscribe({ topic: 'user.created', fromBeginning: false });
+    const consumer = kafka.consumer({ groupId: 'cap-group' });
+    await consumer.connect();
+    await consumer.subscribe({ topic: 'user.created', fromBeginning: false });
 
-  await consumer.run({
+    await consumer.run({
 
-    eachMessage: async ({ message }) => {
-      if (!message.value) return;
+      eachMessage: async ({ message }) => {
+        if (!message.value) return;
 
-      const user: ClienteEntity = JSON.parse(message.value.toString());
-      if (!user.id) return;
-      console.log(user)
-      const carrinhoExistente = await carRepositoryRedis.findCarByUserId(user.id);
-      if (carrinhoExistente) return console.log("carrinho ja existe");
+        const user: ClienteEntity = JSON.parse(message.value.toString());
+        if (!user.id) return;
+        console.log(user)
+        const carrinhoExistente = await carRepositoryRedis.findCarByUserId(user.id);
+        if (carrinhoExistente) return console.log("carrinho ja existe");
 
-      const carrinho = new Carrinho();
-      carrinho.user = user;
+        const carrinho = new Carrinho();
+        carrinho.user = user;
 
-      await carRepositoryRedis.createCarrinho(carrinho);
-    }
-    
-    // eachMessage: async ({ message }) => {
-    //   if (!message.value) return;
+        await carRepositoryRedis.createCarrinho(carrinho);
+      }
 
-    //   const user: ClienteEntity = JSON.parse(message.value.toString());
-    //   console.log('Cliente recebido:', user.nome, user.email);
+      // eachMessage: async ({ message }) => {
+      //   if (!message.value) return;
 
-    //   const carrinho = new Carrinho()
-    //   carrinho.user = user;
+      //   const user: ClienteEntity = JSON.parse(message.value.toString());
+      //   console.log('Cliente recebido:', user.nome, user.email);
 
-    //   try {
-    //     await cds.tx(async (tx) => {
-    //       if (user.id === undefined) {
-    //         throw new Error("Usuário nao existente")
-    //       }
-    //     })
-    //   } catch (error) {
+      //   const carrinho = new Carrinho()
+      //   carrinho.user = user;
 
-    //   }
-    // try {
-    //   await cds.tx(async (tx) => {
-    //     if (user.id === undefined) {
-    //       throw new Error("Usuário nao existente")
-    //     }
+      //   try {
+      //     await cds.tx(async (tx) => {
+      //       if (user.id === undefined) {
+      //         throw new Error("Usuário nao existente")
+      //       }
+      //     })
+      //   } catch (error) {
 
-    //     console.log("antes de encontrar")
-    //     const carrinhoEncontrado: Carrinho = await carRepository.findByUserId(tx, user.id)
-    //     console.log("depois de encontrar")
+      //   }
+      // try {
+      //   await cds.tx(async (tx) => {
+      //     if (user.id === undefined) {
+      //       throw new Error("Usuário nao existente")
+      //     }
 
-    //     if (carrinhoEncontrado) {
-    //       throw new Error("Carrinho já existe");
-    //     }
+      //     console.log("antes de encontrar")
+      //     const carrinhoEncontrado: Carrinho = await carRepository.findByUserId(tx, user.id)
+      //     console.log("depois de encontrar")
 
-    //     console.log("antes de salvar no banco")
-    //      await carRepository.createCarrinho2(tx,carrinho)
-    //     console.log("salvo no banco")
-    //     // Verifica se já existe carrinho para esse usuário
-    //     // const existing = await tx.run(
-    //     //   SELECT.one.from('Carrinhos').where({ user_id: user.id })
-    //     // );
+      //     if (carrinhoEncontrado) {
+      //       throw new Error("Carrinho já existe");
+      //     }
 
-    //     // if (existing) {
-    //     //   console.warn(`Carrinho já existe para usuário ${user.id}, ignorando.`);
-    //     //   return;
-    //     // }
+      //     console.log("antes de salvar no banco")
+      //      await carRepository.createCarrinho2(tx,carrinho)
+      //     console.log("salvo no banco")
+      //     // Verifica se já existe carrinho para esse usuário
+      //     // const existing = await tx.run(
+      //     //   SELECT.one.from('Carrinhos').where({ user_id: user.id })
+      //     // );
+
+      //     // if (existing) {
+      //     //   console.warn(`Carrinho já existe para usuário ${user.id}, ignorando.`);
+      //     //   return;
+      //     // }
 
 
-    //   });
-    // } catch (err) {
-    //   console.error('Erro ao processar mensagem Kafka:', err);
-    //   // Aqui você decide: deixar o Kafka retentar ou enviar pra DLQ
-    //   throw err; // lança → Kafka vai retentar conforme sua config
-    // }
-    //  }
-  });
-} catch (error) {
+      //   });
+      // } catch (err) {
+      //   console.error('Erro ao processar mensagem Kafka:', err);
+      //   // Aqui você decide: deixar o Kafka retentar ou enviar pra DLQ
+      //   throw err; // lança → Kafka vai retentar conforme sua config
+      // }
+      //  }
+    });
+  } catch (error) {
     console.error('Kafka indisponível, tentando novamente em 10s...', error);
     setTimeout(startConsumerUser, 10000);
   }
