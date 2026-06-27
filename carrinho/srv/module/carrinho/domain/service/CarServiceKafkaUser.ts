@@ -35,7 +35,7 @@ export async function startConsumerUser() {
 
   try {
 
-    const kafka = KafkaClient.getInstace()
+    const kafka = KafkaClient.getInstance()
 
     const consumer = kafka.consumer({ groupId: 'cap-group' });
     await consumer.connect();

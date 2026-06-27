@@ -6,7 +6,7 @@ export class KafkaClient {
 
     private static instance: Kafka;
 
-    public static getInstace(): Kafka {
+    public static getInstance(): Kafka {
         if (!KafkaClient.instance) {
 
             const isSSL = process.env.KAFKA_PROTOCOL === 'SASL_SSL';
