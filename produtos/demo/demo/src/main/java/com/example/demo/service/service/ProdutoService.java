@@ -13,6 +13,9 @@ import com.example.demo.repository.ProdutoRepository;
 import com.example.demo.service.model.FotoProduto;
 import com.example.demo.service.model.NovaFoto;
 import com.example.demo.service.model.Produto;
+import com.example.demo.service.model.ProdutoKafka;
+import com.example.demo.service.strategy.broker.BrokerInterfaceMarkup;
+import com.example.demo.service.strategy.broker.StrategyBroker;
 import com.example.demo.service.strategy.storage.StrategyStorage;
 
 @Service
@@ -20,10 +23,12 @@ public class ProdutoService {
     
     private ProdutoRepository produtoRepository;
     private StrategyStorage strategyStorage;
+    private StrategyBroker strategyBroker;
 
-    public ProdutoService(ProdutoRepository produtoRepository, StrategyStorage strategyStorage){
+    public ProdutoService(ProdutoRepository produtoRepository, StrategyStorage strategyStorage, StrategyBroker strategyBroker){
         this.produtoRepository = produtoRepository;
         this.strategyStorage = strategyStorage;
+        this.strategyBroker = strategyBroker;
     }
 
     public List<Produto> listarProdutos(){
@@ -45,6 +50,11 @@ public class ProdutoService {
         novaFoto.setFiles(files);
 
         strategyStorage.armazenar("Local", novaFoto);
+
+        ProdutoKafka produtoKafka = new ProdutoKafka(); 
+        produtoKafka.setId(null);
+
+        strategyBroker.enviarMensagem("KafkaMensagem", produtoKafka);
 
         return produto;
     }
