@@ -52,8 +52,10 @@ public class ProdutoService {
         NovaFoto novaFoto = new NovaFoto();
         novaFoto.setProduto(produto);
         novaFoto.setFiles(files);
+        //TODO salvar URL do repositorio de foto antes de armazenar
 
         strategyStorage.armazenar("Local", novaFoto);
+
 
         ProdutoKafka produtoKafka = new ProdutoKafka();
         produtoKafka.setId(produto.getId());
