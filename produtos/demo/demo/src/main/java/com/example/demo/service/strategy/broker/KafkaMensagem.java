@@ -1,11 +1,27 @@
 package com.example.demo.service.strategy.broker;
 
-public class KafkaMensagem implements BrokerInterface{
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.kafka.core.KafkaTemplate;
+
+
+import com.example.demo.service.model.ProdutoKafka;
+
+@Component("KafkaMensagem")
+public class KafkaMensagem implements BrokerInterface {
+
+    @Autowired
+    private KafkaTemplate<String, Object> kafka;
 
     @Override
     public void enviarMensagemAoBroker(BrokerInterfaceMarkup brokerInterfaceMarkup) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'enviarMensagemAoBroker'");
+
+        if (brokerInterfaceMarkup instanceof ProdutoKafka produto) {
+
+            kafka.send("product.updated", produto);
+            System.out.println(produto.getNome());
+        }
+
     }
-    
+
 }
