@@ -18,6 +18,8 @@ import com.example.demo.service.strategy.broker.BrokerInterfaceMarkup;
 import com.example.demo.service.strategy.broker.StrategyBroker;
 import com.example.demo.service.strategy.storage.StrategyStorage;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProdutoService {
     
@@ -40,6 +42,7 @@ public class ProdutoService {
         return produtoRepository.produtoById(id);
     }
 
+    @Transactional
     public Produto cadastrarProduto(Produto produtoRequests,List<MultipartFile> files){
 
 
@@ -52,8 +55,13 @@ public class ProdutoService {
         strategyStorage.armazenar("Local", novaFoto);
 
         ProdutoKafka produtoKafka = new ProdutoKafka(); 
-        produtoKafka.setId(null);
+        produtoKafka.setId(produto.getId());
+        produtoKafka.setDescricao(produto.getDescricao());
+        produtoKafka.setNome(produto.getNome());
 
+        System.out.println(produto.getId());
+        System.out.println(produto.getNome());
+        System.out.println(produto.getDescricao());
         strategyBroker.enviarMensagem("KafkaMensagem", produtoKafka);
 
         return produto;
