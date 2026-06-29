@@ -7,8 +7,10 @@ import javax.swing.text.StyledEditorKit.BoldAction;
 
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.service.entity.FotoProdutoEntity;
 import com.example.demo.service.entity.ProdutoEntity;
 import com.example.demo.service.jpa.ProdutoRepositoryJPA;
+import com.example.demo.service.model.FotoProduto;
 import com.example.demo.service.model.Produto;
 
 @Repository
@@ -43,6 +45,23 @@ public class ProdutoRepository {
         });
 
         return produtos;
+
+    }
+
+    public FotoProduto salvarFoto(FotoProduto fotoProduto ){
+
+        ProdutoEntity produtoEntity = new ProdutoEntity();
+        produtoEntity.setDescricao(fotoProduto.getProduto().getDescricao());
+        produtoEntity.setId(fotoProduto.getProduto().getId());
+        produtoEntity.setNome(fotoProduto.getProduto().getNome());
+
+        FotoProdutoEntity fotoProdutoEntity = new FotoProdutoEntity();
+        fotoProdutoEntity.setProduto(produtoEntity);
+        fotoProdutoEntity.setUrl(fotoProduto.getUrl());
+
+        produtoRepositoryJPA.save(fotoProdutoEntity);
+
+        return fotoProduto;
 
     }
 

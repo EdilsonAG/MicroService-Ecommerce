@@ -52,7 +52,12 @@ public class ProdutoService {
         NovaFoto novaFoto = new NovaFoto();
         novaFoto.setProduto(produto);
         novaFoto.setFiles(files);
-        //TODO salvar URL do repositorio de foto antes de armazenar
+        // TODO salvar URL do repositorio de foto antes de armazenar
+
+        FotoProduto fotoProduto = new FotoProduto();
+        fotoProduto.setProduto(produto);
+        fotoProduto.setUrl(nomeAleatorio);
+        produtoRepository.salvarFoto(fotoProduto);
 
         strategyStorage.armazenar("Local", novaFoto);
 
