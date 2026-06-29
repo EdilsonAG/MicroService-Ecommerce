@@ -22,30 +22,31 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ProdutoService {
-    
+
     private ProdutoRepository produtoRepository;
     private StrategyStorage strategyStorage;
     private StrategyBroker strategyBroker;
 
-    public ProdutoService(ProdutoRepository produtoRepository, StrategyStorage strategyStorage, StrategyBroker strategyBroker){
+    public ProdutoService(ProdutoRepository produtoRepository, StrategyStorage strategyStorage,
+            StrategyBroker strategyBroker) {
         this.produtoRepository = produtoRepository;
         this.strategyStorage = strategyStorage;
         this.strategyBroker = strategyBroker;
     }
 
-    public List<Produto> listarProdutos(){
+    public List<Produto> listarProdutos() {
         return produtoRepository.listarProdutos();
     }
 
-
-    public Produto produtoById(Long id){
+    public Produto produtoById(Long id) {
         return produtoRepository.produtoById(id);
     }
 
     @Transactional
-    public Produto cadastrarProduto(Produto produtoRequests,List<MultipartFile> files){
+    public Produto cadastrarProduto(Produto produtoRequests, List<MultipartFile> files) {
 
-
+        String nomeAleatorio = gerarNomeArquivo(produtoRequests.getNome());
+        produtoRequests.setNome(nomeAleatorio);
         Produto produto = produtoRepository.salvar(produtoRequests);
 
         NovaFoto novaFoto = new NovaFoto();
@@ -54,7 +55,7 @@ public class ProdutoService {
 
         strategyStorage.armazenar("Local", novaFoto);
 
-        ProdutoKafka produtoKafka = new ProdutoKafka(); 
+        ProdutoKafka produtoKafka = new ProdutoKafka();
         produtoKafka.setId(produto.getId());
         produtoKafka.setDescricao(produto.getDescricao());
         produtoKafka.setNome(produto.getNome());
@@ -65,6 +66,10 @@ public class ProdutoService {
         strategyBroker.enviarMensagem("KafkaMensagem", produtoKafka);
 
         return produto;
+    }
+
+    private String gerarNomeArquivo(String nomeOriginal) {
+        return UUID.randomUUID().toString() + "_" + nomeOriginal;
     }
 
 }
