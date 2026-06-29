@@ -11,7 +11,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 @Repository
-public class ProdutoRepositoryImpl implements ProdutoRepositoryQueries {
+public class ProdutoRepositoryJPAImpl implements ProdutoRepositoryQueries {
     @PersistenceContext
     private EntityManager manager;
 

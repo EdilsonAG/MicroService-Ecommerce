@@ -22,7 +22,7 @@ public class FotoProdutoEntity {
     private String url;
  
     @ManyToOne
-    @JoinColumn(name = "id_produto")
+    @JoinColumn(name = "id_produto_entity")
     private ProdutoEntity produto;
 
     public ProdutoEntity getProduto() {
