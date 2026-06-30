@@ -44,6 +44,8 @@ public class ProdutoService {
 
     @Transactional
     public Produto cadastrarProduto(Produto produtoRequests, List<MultipartFile> files) {
+        ProdutoKafka produtoKafka = new ProdutoKafka();
+        produtoKafka.setNome(produtoRequests.getNome());
 
         String nomeAleatorio = gerarNomeArquivo(produtoRequests.getNome());
         produtoRequests.setNome(nomeAleatorio);
@@ -56,16 +58,13 @@ public class ProdutoService {
 
         FotoProduto fotoProduto = new FotoProduto();
         fotoProduto.setProduto(produto);
-        fotoProduto.setUrl(nomeAleatorio);
+        fotoProduto.setUrl(produtoRequests.getNome());
         produtoRepository.salvarFoto(fotoProduto);
 
         strategyStorage.armazenar("Local", novaFoto);
 
-
-        ProdutoKafka produtoKafka = new ProdutoKafka();
         produtoKafka.setId(produto.getId());
         produtoKafka.setDescricao(produto.getDescricao());
-        produtoKafka.setNome(produto.getNome());
 
         System.out.println(produto.getId());
         System.out.println(produto.getNome());

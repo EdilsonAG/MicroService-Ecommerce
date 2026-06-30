@@ -14,7 +14,7 @@ export async function startConsumerProduct() {
         console.log("chegou")
         const consumer = kafka.consumer({ groupId: 'group-car-product' });
         await consumer.connect();
-        await consumer.subscribe({ topic: 'product.updated', fromBeginning: false });
+        await consumer.subscribe({ topic: 'product.updated', fromBeginning: true });
         console.log("chegou2")
 
         await consumer.run({
