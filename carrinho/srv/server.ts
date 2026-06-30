@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from 'express'
 import {  startConsumerUser } from './module/carrinho/domain/service/CarServiceKafkaUser';
 const cds = require('@sap/cds');
 import path from 'path'
+import { startConsumerProduct } from './module/carrinho/domain/service/CarServiceKafkaProduct';
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'local'}` });
 
 const publicKeyPem = readFileSync(
@@ -53,4 +54,5 @@ async function jwt_auth(req: Request, res: Response, next: NextFunction) {
 cds.on('bootstrap', (app) => {
     app.use('/odata', jwt_auth)
     startConsumerUser();
+    startConsumerProduct();
 })

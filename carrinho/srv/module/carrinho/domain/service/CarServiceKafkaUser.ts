@@ -37,7 +37,7 @@ export async function startConsumerUser() {
 
     const kafka = KafkaClient.getInstance()
 
-    const consumer = kafka.consumer({ groupId: 'cap-group' });
+    const consumer = kafka.consumer({ groupId: 'group-car-user' });
     await consumer.connect();
     await consumer.subscribe({ topic: 'user.created', fromBeginning: false });
 

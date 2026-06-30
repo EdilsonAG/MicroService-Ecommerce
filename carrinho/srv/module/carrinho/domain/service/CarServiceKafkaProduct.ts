@@ -11,15 +11,17 @@ export async function startConsumerProduct() {
         const redis = RedisClient.getInstance()
         const kafka = KafkaClient.getInstance()
 
-        const consumer = kafka.consumer({ groupId: 'cap-group' });
+        console.log("chegou")
+        const consumer = kafka.consumer({ groupId: 'group-car-product' });
         await consumer.connect();
-        await consumer.subscribe({ topic: 'product.updated', fromBeginning: true });
+        await consumer.subscribe({ topic: 'product.updated', fromBeginning: false });
+        console.log("chegou2")
 
         await consumer.run({
             eachMessage: async ({ message }) => {
                 //if (!message.value) return;
 
-
+                
                 /*
                 Quando um produto é deletado no Product Service, o producer
                 Spring envia uma mensagem com valor null para o Kafka. Isso é o padrão do Log Compaction para7
@@ -36,8 +38,10 @@ export async function startConsumerProduct() {
                 }
 
                 try {
+                    console.log("chegou aqui")
                     const product: Product = JSON.parse(message.value.toString());
-
+                    console.log("Produtos chegaram")
+                    console.log(product)
                     // Set já sobrescreve se existir, cria se não existir
 
                     await redis.set(
