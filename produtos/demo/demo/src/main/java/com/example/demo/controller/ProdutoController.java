@@ -21,6 +21,7 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -59,14 +60,19 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-    // @GetMapping
-    // public List<Produto> listarProduto() {
-    //     return produtoService.listarProdutos();
-    // }
+    @GetMapping
+    public List<Produto> listarProduto() {
+        return produtoService.listarProdutos();
+    }
 
     @GetMapping("/{id}")
     public Produto produtoById(@PathVariable Long id) {
         return produtoService.produtoById(id);
+    }
+
+    @PutMapping
+    public void adf(){
+        System.out.println("AÇOSJIFDA SE FODA FALOU");
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

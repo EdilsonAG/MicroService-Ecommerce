@@ -111,7 +111,7 @@ public class AuthorizationServerConfigJWT {
                             .scope("read")
                             .scope("write")
                             .tokenSettings(TokenSettings.builder()
-                                    .accessTokenTimeToLive(Duration.ofMinutes(1))
+                                    .accessTokenTimeToLive(Duration.ofMinutes(10))
                                     .refreshTokenTimeToLive(Duration.ofDays(1))
                                     .reuseRefreshTokens(false)
                                     .build())
