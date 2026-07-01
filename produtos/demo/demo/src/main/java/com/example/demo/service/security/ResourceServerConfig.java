@@ -15,6 +15,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -35,11 +36,11 @@ public class ResourceServerConfig {
     public SecurityFilterChain security(HttpSecurity http) throws Exception {
         http
                 .csrf(t -> t.disable())
-               
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(e -> 
                     e.requestMatchers(HttpMethod.GET, "/produto").permitAll()
                     .requestMatchers(HttpMethod.GET, "/produto/fotos/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/produto").permitAll()
+                  //  .requestMatchers(HttpMethod.POST, "/produto").permitAll()
                     .anyRequest()
                     .authenticated())
                 .oauth2ResourceServer(
