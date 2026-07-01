@@ -1,12 +1,15 @@
 package com.example.demo.service.service;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.repository.ProdutoRepository;
@@ -16,6 +19,7 @@ import com.example.demo.service.model.Produto;
 import com.example.demo.service.model.ProdutoKafka;
 import com.example.demo.service.strategy.broker.BrokerInterfaceMarkup;
 import com.example.demo.service.strategy.broker.StrategyBroker;
+import com.example.demo.service.strategy.storage.StoragePropeties;
 import com.example.demo.service.strategy.storage.StrategyStorage;
 
 import jakarta.transaction.Transactional;
@@ -26,6 +30,9 @@ public class ProdutoService {
     private ProdutoRepository produtoRepository;
     private StrategyStorage strategyStorage;
     private StrategyBroker strategyBroker;
+
+    @Autowired
+    private StoragePropeties storagePropeties;
 
     public ProdutoService(ProdutoRepository produtoRepository, StrategyStorage strategyStorage,
             StrategyBroker strategyBroker) {
@@ -42,23 +49,46 @@ public class ProdutoService {
         return produtoRepository.produtoById(id);
     }
 
+    private Path getArquivoPath(String nomeArquivo) {
+
+        return storagePropeties.getLocal().getDiretorioFotos().resolve(Path.of(nomeArquivo));
+    }
+
     @Transactional
     public Produto cadastrarProduto(Produto produtoRequests, List<MultipartFile> files) {
         ProdutoKafka produtoKafka = new ProdutoKafka();
         produtoKafka.setNome(produtoRequests.getNome());
 
-        String nomeAleatorio = gerarNomeArquivo(produtoRequests.getNome());
-        produtoRequests.setNome(nomeAleatorio);
         Produto produto = produtoRepository.salvar(produtoRequests);
 
         NovaFoto novaFoto = new NovaFoto();
-        novaFoto.setProduto(produto);
-        novaFoto.setFiles(files);
-        // TODO salvar URL do repositorio de foto antes de armazenar
 
         FotoProduto fotoProduto = new FotoProduto();
+
+        for (MultipartFile file : files) {
+            try {
+                String originalName = file.getOriginalFilename();
+                String orginalFileNameRandom = gerarNomeArquivo(originalName);
+                produto.setNome(orginalFileNameRandom);
+                produtoRequests.setNome(orginalFileNameRandom);
+                // Path arquivoPath = getArquivoPath(file.getOriginalFilename());
+                // FileCopyUtils.copy(file.getInputStream(),
+                // Files.newOutputStream(arquivoPath));
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        }
+
+        novaFoto.setFiles(files);
+
+        
         fotoProduto.setProduto(produto);
+ 
+        novaFoto.setProduto(produto);
+     
         fotoProduto.setUrl(produtoRequests.getNome());
+
         produtoRepository.salvarFoto(fotoProduto);
 
         strategyStorage.armazenar("Local", novaFoto);

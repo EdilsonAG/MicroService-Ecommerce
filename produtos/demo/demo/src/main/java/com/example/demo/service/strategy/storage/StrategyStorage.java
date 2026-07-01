@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.service.model.FotoProduto;
+import com.example.demo.service.model.FotoRecuperada;
 import com.example.demo.service.model.NovaFoto;
  
 
@@ -21,6 +22,11 @@ public class StrategyStorage {
     public void armazenar(String storage, NovaFoto novaFoto) {
         FotoStorage fotoStorage = fotoStorageMap.get(storage);
         fotoStorage.armazenar(novaFoto);
+    }
+
+    public FotoRecuperada recuperar(String storage, String nomeArquivo){
+        FotoStorage fotoStorage = fotoStorageMap.get(storage);
+        return fotoStorage.recuperar(nomeArquivo);
     }
 
     // nomeArquivo agora é passado corretamente
