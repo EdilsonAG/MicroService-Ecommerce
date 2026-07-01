@@ -38,6 +38,7 @@ public class ResourceServerConfig {
                
                 .authorizeHttpRequests(e -> 
                     e.requestMatchers(HttpMethod.GET, "/produto").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/produto/fotos/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/produto").permitAll()
                     .anyRequest()
                     .authenticated())
