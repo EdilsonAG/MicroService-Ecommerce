@@ -96,6 +96,10 @@ class CarRepositoryRedis {
         await redis.set(`carrinho:${carrinhoId}`, JSON.stringify(carrinho));
         await redis.expire(`carrinho:${carrinhoId}`, TTL);
     }
+    async popularProduto(produto) {
+        const redis = redisClient_1.RedisClient.getInstance();
+        redis.get;
+    }
 }
 exports.CarRepositoryRedis = CarRepositoryRedis;
 //# sourceMappingURL=CarRepositoryRedis.js.map
