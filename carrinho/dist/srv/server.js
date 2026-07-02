@@ -5,9 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // server.ts
 const fs_1 = require("fs");
-const CarServiceKafka_1 = require("./module/carrinho/domain/service/CarServiceKafka");
+const CarServiceKafkaUser_1 = require("./module/carrinho/domain/service/CarServiceKafkaUser");
 const cds = require('@sap/cds');
 const path_1 = __importDefault(require("path"));
+const CarServiceKafkaProduct_1 = require("./module/carrinho/domain/service/CarServiceKafkaProduct");
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'local'}` });
 const publicKeyPem = (0, fs_1.readFileSync)(path_1.default.join(__dirname, 'keys', 'algafood-pkey.pem'), 'utf8');
 function parseCookies(cookie) {
@@ -22,14 +23,18 @@ async function jwt_auth(req, res, next) {
     console.log("\n\n");
     console.log("ESTA NO MIWARE");
     console.log("\n\n");
-    const token = parseCookies(req.headers.cookie || '')['access_token'];
-    console.log(token);
-    if (!token)
+    console.log(req);
+    console.log(res);
+    // const   = parseCookies(req.headers.cookie || '')['access_token']
+    const authHeader = req.headers.authorization?.replace('Bearer ', '');
+    console.log(authHeader);
+    console.log(authHeader);
+    if (!authHeader)
         return res.status(401).send('Unauthorized');
     try {
         const { jwtVerify, importSPKI } = await import('jose');
         const publicKey = await importSPKI(publicKeyPem, 'RS256');
-        const { payload } = await jwtVerify(token, publicKey);
+        const { payload } = await jwtVerify(authHeader, publicKey);
         req.user = new cds.User({
             id: payload.sub,
             roles: payload.authorities || []
@@ -42,6 +47,7 @@ async function jwt_auth(req, res, next) {
 }
 cds.on('bootstrap', (app) => {
     app.use('/odata', jwt_auth);
-    (0, CarServiceKafka_1.startConsumer)();
+    (0, CarServiceKafkaUser_1.startConsumerUser)();
+    (0, CarServiceKafkaProduct_1.startConsumerProduct)();
 });
 //# sourceMappingURL=server.js.map

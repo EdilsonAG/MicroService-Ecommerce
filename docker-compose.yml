@@ -8,10 +8,17 @@ services:
 
   ecomerce-redis:
     image: redis:7
+    command: redis-server --requirepass Ed.183729
     ports:
       - "6379:6379"
     networks:
       - ecomerce-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "Ed.183729", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 
   # apenas com PLAINTEXT sem segurança nenhuma
@@ -161,6 +168,7 @@ services:
       DB_HOST: ecomerce-mysql-auth
       PROFILE: docker
       REDIS_HOST: ecomerce-redis
+      REDIS_PASS: Ed.183729
     ports:
       - "8080:8080"
     networks:
@@ -169,7 +177,11 @@ services:
       - ./chavekeystoredev2:/etc/kafka/secrets 
     depends_on:
       ecomerce-mysql-auth:
-        condition: service_healthy   
+        condition: service_healthy
+      ecomerce-kafka:
+        condition: service_healthy
+      ecomerce-redis:
+        condition: service_healthy
     
   ecomerce-produto:
     build: ./produtos/demo/demo
@@ -177,6 +189,9 @@ services:
     environment:
       DB_HOST: ecomerce-mysql-produto
       PROFILE: docker
+      KAFKA_BROKERS: ecomerce-kafka:29092
+      REDIS_HOST: ecomerce-redis
+      REDIS_PASS: Ed.183729
     ports:
       - "8081:8081"
     networks:
@@ -184,6 +199,10 @@ services:
     depends_on:
       ecomerce-mysql-produto:
         condition: service_healthy 
+      ecomerce-kafka:
+        condition: service_healthy
+      ecomerce-redis:
+        condition: service_healthy
 
 
   ecomerce-redis-carrinho:
@@ -194,7 +213,7 @@ services:
     networks:
       - ecomerce-network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "Ed.183729", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -221,7 +240,7 @@ services:
       - ecomerce-network
     depends_on:
       ecomerce-redis-carrinho:
-        condition: service_healthy 
+        condition: service_healthy
       ecomerce-kafka:
         condition: service_started
 
@@ -233,9 +252,12 @@ services:
     networks:
       - ecomerce-network
     depends_on:
+      ecomerce-kafka:
+        condition: service_healthy
       ecomerce-auth:
         condition: service_started
       ecomerce-produto:
         condition: service_started
       ecomerce-carrinho:
         condition: service_started
+      
