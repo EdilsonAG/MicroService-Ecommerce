@@ -1,0 +1,55 @@
+name: Deploy Auth
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'auth/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: buildando java
+        run: mvn clean package -DskipTests
+        working-directory: ./auth/demo/demo
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build e Push imagem
+        uses: docker/build-push-action@v5
+        with:
+          context: ./auth/demo/demo
+          push: true
+          tags: |
+            edialgon/ecomerce-auth:latest
+            edialgon/ecomerce-auth:${{ github.sha }}
+          platforms: linux/amd64
+
+      - name: Deploy na OCI via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.OCI_HOST }}
+          username: ${{ secrets.OCI_USER }}
+          key: ${{ secrets.OCI_SSH_KEY }}
+          script: |
+            cd /caminho/do/projeto
+            docker compose pull ecomerce-auth
+            docker compose up -d ecomerce-auth
