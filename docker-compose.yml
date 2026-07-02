@@ -196,6 +196,8 @@ services:
       - "8081:8081"
     networks:
       - ecomerce-network
+    volumes:
+      - /app/catalogo:/app/catalogo
     depends_on:
       ecomerce-mysql-produto:
         condition: service_healthy 
