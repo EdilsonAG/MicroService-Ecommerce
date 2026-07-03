@@ -6,5 +6,6 @@ public class DadosUserDTO {
 
     public record RegisterRequest(String email, String pass, String name){}
     public record RegisterRequest2(String email, String pass, String name){}
+    public record RegisterRequest3(String email, String pass, String name){}
 
 }
