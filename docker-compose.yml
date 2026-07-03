@@ -185,7 +185,7 @@ services:
     
   ecomerce-produto:
     build: ./produtos/demo/demo
-    image: ecomerce-produto
+    image: edialgon/ecomerce-produto:latest
     environment:
       DB_HOST: ecomerce-mysql-produto
       PROFILE: docker
