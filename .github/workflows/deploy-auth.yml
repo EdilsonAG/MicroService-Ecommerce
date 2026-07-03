@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build e Push imagem
-      
+
         uses: docker/build-push-action@v5
         with:
           context: ./auth/demo/demo
@@ -52,6 +52,6 @@ jobs:
           username: ${{ secrets.OCI_USER }}
           key: ${{ secrets.OCI_SSH_KEY }}
           script: |
-            cd /caminho/do/projeto
+            cd /home/ubuntu/MicroService-Ecommerce
             docker compose pull ecomerce-auth
             docker compose up -d ecomerce-auth
