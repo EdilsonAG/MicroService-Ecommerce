@@ -162,7 +162,7 @@ services:
       start_period: 30s
 
   ecomerce-auth:
-    build: ./auth/demo/demo
+    #build: ./auth/demo/demo
     image: ecomerce-auth
     environment:
       DB_HOST: ecomerce-mysql-auth
