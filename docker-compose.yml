@@ -163,7 +163,7 @@ services:
 
   ecomerce-auth:
     #build: ./auth/demo/demo
-    image: ecomerce-auth
+    image: edialgon/ecomerce-auth:latest
     environment:
       DB_HOST: ecomerce-mysql-auth
       PROFILE: docker
