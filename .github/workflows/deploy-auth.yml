@@ -42,7 +42,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          platforms: linux/amd64,linux/arm64
+          
 
       - name: Build e Push imagem
 
@@ -53,7 +53,7 @@ jobs:
           tags: |
             edialgon/ecomerce-auth:latest
             edialgon/ecomerce-auth:${{ github.sha }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
 
       - name: Deploy na OCI via SSH
         uses: appleboy/ssh-action@v1
