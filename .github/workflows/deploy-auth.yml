@@ -56,5 +56,6 @@ jobs:
           key: ${{ secrets.OCI_SSH_KEY }}
           script: |
             cd /home/ubuntu/MicroService-Ecommerce
+            git pull origin main
             docker compose pull ecomerce-auth
             docker compose up -d ecomerce-auth
