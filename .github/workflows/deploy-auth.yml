@@ -25,6 +25,12 @@ jobs:
         run: mvn clean package -DskipTests
         working-directory: ./auth/demo/demo
 
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: debug
         run: ls -la ./auth/demo/demo/target
 
