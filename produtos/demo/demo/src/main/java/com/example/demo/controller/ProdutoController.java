@@ -78,7 +78,7 @@ public class ProdutoController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Produto criarProduto(@RequestPart("files") List<MultipartFile> files,
             @RequestPart("produtoRequests") Produto produtoRequests) {
-        System.out.println("PRODUTO. CHEGOU");
+        System.out.println("PRODUTO.. CHEGOU");
         return produtoService.cadastrarProduto(produtoRequests, files);
     }
 
