@@ -23,16 +23,17 @@ export class CarController {
             }
         })
 
-        srv.on('CREATE', 'Carrinho', async (req: any) => {
+        srv.on('addItemCarrinho', async (req: any) => {
             try {
                 console.log("\n\n\n")
                 console.log("CREATE CARRINHO")
                 const authHeader = req.headers.authorization?.replace('Bearer ', '')
                 const decoded = await jwt.decode(authHeader);
                 const idUser = decoded.id
-                const idProduto:string = req.produto
+                const idProduto:string = req.data.idProduto
                 console.log("token")
                 console.log(authHeader)
+                console.log(idProduto)
 
                 this.carService.addItemCarrinho(idUser,idProduto)
 
