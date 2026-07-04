@@ -131,10 +131,13 @@ export class CarRepositoryRedis implements CarRepository{
         await redis.expire(`carrinho:${carrinhoId}`, TTL);
     }
 
-    async findItemById(idItem:string):Promise<void>{
+    async findItemById(idItem:string):Promise<Product| null>{
 
         const redis = RedisClient.getInstance()
 
-        await redis.get
+        const data = await redis.get(`product:${idItem}`);
+        if (!data) return null;
+
+        return JSON.parse(data) as Product
     }
 }
