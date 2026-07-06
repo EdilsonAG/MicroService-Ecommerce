@@ -28,7 +28,7 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
     System.out.println(("\n\n\n"));
     System.out.println(http);
     http
-    .cors(Customizer.withDefaults())
+    //.cors(Customizer.withDefaults())
     .csrf(csrf -> csrf.disable())
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
         .authorizeHttpRequests( authorize -> authorize
@@ -44,18 +44,18 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
     return http.build();
 }
 
-@Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("http://localhost:5173"));
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    config.setAllowedHeaders(List.of("*"));
-    config.setAllowCredentials(true);
+// @Bean
+// public CorsConfigurationSource corsConfigurationSource() {
+//     CorsConfiguration config = new CorsConfiguration();
+//     config.setAllowedOrigins(List.of("http://localhost:5173"));
+//     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//     config.setAllowedHeaders(List.of("*"));
+//     config.setAllowCredentials(true);
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", config);
-    return source;
-}
+//     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//     source.registerCorsConfiguration("/**", config);
+//     return source;
+// }
 
  
     @Bean
