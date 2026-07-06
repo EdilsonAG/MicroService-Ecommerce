@@ -18,16 +18,20 @@ class CarController {
                 req.error(400, error.message);
             }
         });
-        srv.on('CREATE', 'Carrinho', async (req) => {
+        srv.on('addItemCarrinho', async (req) => {
             try {
                 console.log("\n\n\n");
                 console.log("CREATE CARRINHO");
                 const authHeader = req.headers.authorization?.replace('Bearer ', '');
                 const decoded = await jwt.decode(authHeader);
-                const idUser = decoded.id;
-                const idProduto = req.produto;
+                const idUser = decoded.usuario_id;
+                const idProduto = req.data.idProduto;
                 console.log("token");
                 console.log(authHeader);
+                console.log(idProduto);
+                console.log(idProduto);
+                console.log(idUser);
+                console.log(decoded.usuario_id);
                 this.carService.addItemCarrinho(idUser, idProduto);
             }
             catch (error) {
