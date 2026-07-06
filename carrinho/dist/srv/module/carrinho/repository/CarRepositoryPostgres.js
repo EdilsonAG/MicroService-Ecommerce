@@ -6,6 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CarRepositoryPostgres = void 0;
 const cds_1 = __importDefault(require("@sap/cds"));
 class CarRepositoryPostgres {
+    findItemById(idItem) {
+        throw new Error('Method not implemented.');
+    }
     addItemCarrinho(userId, item) {
         throw new Error('Method not implemented.');
     }
