@@ -14,9 +14,11 @@ export class CarService{
         this.carRepository = new CarRepositoryRedis()
     }
 
-    public criarCIarrinho():void{
-        
+    public async buscarItensCarrinho(idUser:string):Promise<Carrinho | null>{
+       return await this.carRepository.findCarByUserId(idUser)
     }
+
+
 
     public async addItemCarrinho(idUser:string, idProduto:string, quantidade:number){
         

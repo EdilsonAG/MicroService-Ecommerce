@@ -14,10 +14,11 @@ export class CarController {
         srv.on('READ', 'Carrinho', async (req: any) => {
             try {
                 // chamar use case
-                console.log("\n\n\n dados: " + req)
+                const authHeader = req.headers.authorization?.replace('Bearer ', '')
+                const decoded = await jwt.decode(authHeader);
+                const idUser = decoded.usuario_id
 
-                //const id = await this.createProductUseCase.createProduct(req.data);
-                //return { ID: id, ...req.data };
+               return this.carService.buscarItensCarrinho(idUser)
             } catch (error: any) {
                 req.error(400, error.message)
             }
