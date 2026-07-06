@@ -20,7 +20,7 @@ export class CarService{
 
     public async addItemCarrinho(idUser:string, idProduto:string){
         
-        
+        console.log(idUser)
          const carrinhoEncontrado = await this.carRepository.findCarByUserId(idUser)
          const produtoEncontrado = await this.carRepository.findItemById(idProduto)
        
@@ -30,12 +30,14 @@ export class CarService{
             const carrinhoNovo = new Carrinho()
             user.id =  idUser 
             carrinhoNovo.user = user
+            console.log("carrino não encontrado")
             this.carRepository.createCarrinho(carrinhoNovo)
         }
 
         if(carrinhoEncontrado === null || produtoEncontrado === null){
             throw new Error("sff")
         }
+        console.log("adicionar item no carrinho")
 
         const itemCarrinho = new ItemCarrinho()
         itemCarrinho.carrinho = carrinhoEncontrado
