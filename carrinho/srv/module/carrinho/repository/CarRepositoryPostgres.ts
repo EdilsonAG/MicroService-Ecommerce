@@ -2,9 +2,13 @@ import cds from '@sap/cds';
 import { Carrinho } from '../domain/model/Carrinho';
 import { CarRepository } from '../interface/repository/CarRepository';
 import { ItemCarrinho } from '../domain/model/ItemCarrinho';
+import { Product } from '../domain/model/Product';
 
 
 export class CarRepositoryPostgres implements CarRepository{
+    findItemById(idItem: string): Promise<Product | null> {
+        throw new Error('Method not implemented.');
+    }
     addItemCarrinho(userId: string, item: ItemCarrinho): Promise<void> {
         throw new Error('Method not implemented.');
     }
