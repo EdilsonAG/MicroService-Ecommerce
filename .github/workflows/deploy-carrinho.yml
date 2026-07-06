@@ -34,7 +34,7 @@ jobs:
           tags: |
             edialgon/ecomerce-carrinho:latest
             edialgon/ecomerce-carrinho:${{ github.sha }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
 
       - name: Deploy na OCI via SSH
         uses: appleboy/ssh-action@v1

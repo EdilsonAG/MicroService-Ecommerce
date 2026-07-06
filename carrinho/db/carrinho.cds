@@ -4,6 +4,7 @@ using { cuid, managed } from '@sap/cds/common';
 using { app.User } from './user';
  using { app.ItemCarrinho } from './itemCarrinho'; 
 
+@cds.persistence.skip
 entity Carrinho {
     key id          : UUID;
         user        : Association to one User;

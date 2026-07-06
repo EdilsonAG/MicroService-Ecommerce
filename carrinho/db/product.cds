@@ -1,7 +1,7 @@
 namespace app;
 using { managed } from '@sap/cds/common';
 
-
+@cds.persistence.skip
 entity Product : managed {
   key  id: UUID;
   descricaoProduto: String not null;

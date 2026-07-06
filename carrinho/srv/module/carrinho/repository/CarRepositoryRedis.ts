@@ -105,11 +105,19 @@ export class CarRepositoryRedis implements CarRepository{
     async findCarByUserId(userId: string): Promise<Carrinho | null> {
         const redis = RedisClient.getInstance();
 
+        console.log("chegou aqui no findcarByID")
+
         const carrinhoId = await redis.get(`user-carrinho:${userId}`);
         if (!carrinhoId) return null;
 
+        console.log("carrinhoId")
+        console.log(carrinhoId)
+
         const data = await redis.get(`carrinho:${carrinhoId}`);
         if (!data) return null;
+
+        console.log("data")
+        console.log(data)
 
         return JSON.parse(data) as Carrinho;
     }
