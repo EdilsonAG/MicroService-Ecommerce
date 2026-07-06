@@ -28,7 +28,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
-COPY ./keys ./srv/keys
-COPY ./db ./db/
-COPY ./srv ./srv/
-CMD ["node_modules/.bin/cds-serve", "--production"]
+COPY ./keys ./dist/srv/keys
+COPY ./db ./dist/db
+COPY ./srv/*.cds ./dist/srv/
+WORKDIR /app/dist
+CMD ["node", "../node_modules/.bin/cds-serve", "--production"]
