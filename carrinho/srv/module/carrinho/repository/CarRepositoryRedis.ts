@@ -146,6 +146,7 @@ export class CarRepositoryRedis implements CarRepository{
         const data = await redis.get(`product:${idItem}`);
         if (!data) return null;
 
+        console.log
         return JSON.parse(data) as Product
     }
 }

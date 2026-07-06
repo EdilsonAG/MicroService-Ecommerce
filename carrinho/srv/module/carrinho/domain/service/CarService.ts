@@ -18,7 +18,7 @@ export class CarService{
         
     }
 
-    public async addItemCarrinho(idUser:string, idProduto:string){
+    public async addItemCarrinho(idUser:string, idProduto:string, quantidade:number){
         
         console.log(idUser)
         console.log("CHEGOU NO addItemCarrinho")
@@ -42,9 +42,9 @@ export class CarService{
         console.log("adicionar item no carrinho")
 
         const itemCarrinho = new ItemCarrinho()
-        itemCarrinho.carrinho = carrinhoEncontrado
+       // itemCarrinho.carrinho = carrinhoEncontrado
         itemCarrinho.produto = produtoEncontrado
-        itemCarrinho.quantidade = 5
+        itemCarrinho.quantidade = quantidade
 
         
         this.carRepository.addItemCarrinho(idUser,itemCarrinho)
