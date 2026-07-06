@@ -223,8 +223,8 @@ services:
 
  
   ecomerce-carrinho:
-    build: ./carrinho
-    image: ecomerce-carrinho
+    #build: ./carrinho
+    image: edialgon/ecomerce-carrinho:latest
     environment:
       CDS_REQUIRES_AUTH_KIND: dummy
       KAFKA_BROKERS: ecomerce-kafka:29092
