@@ -35,6 +35,7 @@ export class CarController {
                 console.log(authHeader)
                 console.log(idProduto)
                 console.log(idProduto)
+                console.log(idProduto)
                 console.log(idUser)
                 console.log(decoded.usuario_id)
 
