@@ -108,6 +108,7 @@ public class AuthorizationServerConfigJWT {
                                     AuthorizationGrantType.AUTHORIZATION_CODE)
                             .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                             .redirectUri("https://oauth.pstmn.io/v1/callback")
+                            .redirectUri("http://localhost:5173/callback")
                             .scope("read")
                             .scope("write")
                             .tokenSettings(TokenSettings.builder()
