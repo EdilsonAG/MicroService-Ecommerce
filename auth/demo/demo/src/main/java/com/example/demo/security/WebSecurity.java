@@ -38,6 +38,11 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
                .requestMatchers("/auth/register").permitAll()  
             .anyRequest().authenticated()
         )
+        .exceptionHandling(e -> e.authenticationEntryPoint(
+            (request, response, authException) -> {
+                System.out.println("NAO AUTENTICADO NO AUTHORIZE: " + authException.getMessage());
+                response.sendError(401);
+            }))
          .formLogin(Customizer.withDefaults());
   
         
