@@ -120,6 +120,7 @@ public class AuthController {
                 // já estava invalidated pelo Authorization Server, tudo bem
             }
         }
+        
 
         // Troca o code pelo token chamando o Authorization Server
         RestTemplate restTemplate = new RestTemplate();
@@ -139,6 +140,10 @@ public class AuthController {
         headers.setBasicAuth("web", "web1234");
 
         System.out.println("antes de fazer o post para pegar o token");
+        System.out.println("também temos o code");
+        System.out.println(code);
+        System.out.println("e também o codeverifier");
+        System.out.println(codeVerifier);
         ResponseEntity<Map> tokenResponse = restTemplate.postForEntity(
                 // "http://localhost:8080/oauth2/token",
                 // "https://api.bytefire.com.br/oauth2/token",
