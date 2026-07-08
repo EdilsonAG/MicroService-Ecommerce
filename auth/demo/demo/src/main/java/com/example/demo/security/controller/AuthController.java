@@ -98,7 +98,7 @@ public class AuthController {
             asdf.toString();
             // System.out.println("HTTPS SESSEION SECURITY CRIADA");
             HttpSession session = request.getSession(false);
-            //System.out.println("sessao:" + session.getId());
+            // System.out.println("sessao:" + session.getId());
             return ResponseEntity.ok().build();
 
         } catch (BadCredentialsException e) {
@@ -125,6 +125,12 @@ public class AuthController {
             }
         }
         
+ String referer = request.getHeader("Referer");
+System.out.println(referer);
+
+ String origin = request.getHeader("Origin");
+System.out.println(origin);
+
 
         // Troca o code pelo token chamando o Authorization Server
         RestTemplate restTemplate = new RestTemplate();
@@ -250,10 +256,10 @@ public class AuthController {
         System.out.println("chegou pra validar");
 
         HttpSession session = request.getSession(false);
-        //System.out.println(session.getId());
+        // System.out.println(session.getId());
         if (session == null)
             return ResponseEntity.status(401).build();
-        
+
         String token = (String) session.getAttribute("access_token");
         if (token == null)
             return ResponseEntity.status(401).build();
@@ -301,7 +307,7 @@ public class AuthController {
                 System.out.println(newAccessToken);
                 System.out.println("newRefreshToken\n\n");
                 System.out.println(newRefreshToken);
-                    
+
                 session.setAttribute("access_token", newAccessToken);
                 session.setAttribute("refresh_token", newRefreshToken);
 
