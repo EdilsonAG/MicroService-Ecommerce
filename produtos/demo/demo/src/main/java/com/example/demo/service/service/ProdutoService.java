@@ -17,6 +17,7 @@ import com.example.demo.service.model.FotoProduto;
 import com.example.demo.service.model.NovaFoto;
 import com.example.demo.service.model.Produto;
 import com.example.demo.service.model.ProdutoKafka;
+import com.example.demo.service.model.ProdutoResponse;
 import com.example.demo.service.strategy.broker.BrokerInterfaceMarkup;
 import com.example.demo.service.strategy.broker.StrategyBroker;
 import com.example.demo.service.strategy.storage.StoragePropeties;
@@ -41,8 +42,22 @@ public class ProdutoService {
         this.strategyBroker = strategyBroker;
     }
 
-    public List<Produto> listarProdutos() {
-        return produtoRepository.listarProdutos();
+    public List<ProdutoResponse> listarProdutos() {
+        List<Produto> produto = produtoRepository.listarProdutos();
+
+        List<ProdutoResponse> produtoResponses = new ArrayList<>();
+        produto.stream().forEach(item -> {
+            ProdutoResponse produtoResponse = new ProdutoResponse();
+            produtoResponse.setDescricao(item.getDescricao());
+            produtoResponse.setId(item.getId());
+            produtoResponse.setNome(item.getNome());
+            produtoResponse.setPreco(item.getPreco());
+            produtoResponse.setUrl(item.getUrl());
+
+            produtoResponses.add(produtoResponse);
+        } );
+
+        return produtoResponses;
     }
 
     public Produto produtoById(Long id) {
