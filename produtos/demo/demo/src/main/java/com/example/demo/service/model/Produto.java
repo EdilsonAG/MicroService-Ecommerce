@@ -4,7 +4,23 @@ public class Produto {
     private Long id;
     private String nome;
     private String descricao;
+    private String url;
+    private Long preco;
 
+    
+
+    public String getUrl() {
+        return url;
+    }
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    public Long getPreco() {
+        return preco;
+    }
+    public void setPreco(Long preco) {
+        this.preco = preco;
+    }
     
 
     public Long getId() {

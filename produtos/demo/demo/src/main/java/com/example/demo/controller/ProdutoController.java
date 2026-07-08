@@ -35,6 +35,7 @@ import com.example.demo.service.jpa.ProdutoRepositoryJPA;
 import com.example.demo.service.model.FotoRecuperada;
 import com.example.demo.service.model.Produto;
 import com.example.demo.service.model.ProdutoDTO;
+import com.example.demo.service.model.ProdutoResponse;
 import com.example.demo.service.service.ProdutoService;
 import com.example.demo.service.strategy.storage.StrategyStorage;
  
@@ -61,7 +62,7 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public List<Produto> listarProduto() {
+    public List<ProdutoResponse> listarProduto() {
         return produtoService.listarProdutos();
     }
 
