@@ -13,10 +13,12 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.repository.ProdutoRepository;
+import com.example.demo.service.jpa.FotoProdutoRepository;
 import com.example.demo.service.model.FotoProduto;
 import com.example.demo.service.model.NovaFoto;
 import com.example.demo.service.model.Produto;
 import com.example.demo.service.model.ProdutoKafka;
+import com.example.demo.service.model.ProdutoRequest;
 import com.example.demo.service.model.ProdutoResponse;
 import com.example.demo.service.strategy.broker.BrokerInterfaceMarkup;
 import com.example.demo.service.strategy.broker.StrategyBroker;
@@ -31,33 +33,33 @@ public class ProdutoService {
     private ProdutoRepository produtoRepository;
     private StrategyStorage strategyStorage;
     private StrategyBroker strategyBroker;
+    private FotoProdutoRepository fotoProdutoRepository;
 
     @Autowired
     private StoragePropeties storagePropeties;
 
     public ProdutoService(ProdutoRepository produtoRepository, StrategyStorage strategyStorage,
-            StrategyBroker strategyBroker) {
+            StrategyBroker strategyBroker, FotoProdutoRepository fotoProdutoRepository) {
         this.produtoRepository = produtoRepository;
         this.strategyStorage = strategyStorage;
         this.strategyBroker = strategyBroker;
+        this.fotoProdutoRepository = fotoProdutoRepository;
     }
 
     public List<ProdutoResponse> listarProdutos() {
-        List<Produto> produto = produtoRepository.listarProdutos();
-
-        List<ProdutoResponse> produtoResponses = new ArrayList<>();
-        produto.stream().forEach(item -> {
-            ProdutoResponse produtoResponse = new ProdutoResponse();
-            produtoResponse.setDescricao(item.getDescricao());
-            produtoResponse.setId(item.getId());
-            produtoResponse.setNome(item.getNome());
-            produtoResponse.setPreco(item.getPreco());
-            produtoResponse.setUrl(item.getUrl());
-
-            produtoResponses.add(produtoResponse);
-        } );
-
-        return produtoResponses;
+        //List<Produto> produto = produtoRepository.listarProdutos();
+        return fotoProdutoRepository.buscarTodosComFoto();
+        // List<ProdutoResponse> produtoResponses = new ArrayList<>();
+        // produto.stream().forEach(item -> {
+        //     ProdutoResponse produtoResponse = new ProdutoResponse();
+        //     produtoResponse.setDescricao(item.getDescricao());
+        //     produtoResponse.setId(item.getId());
+        //     produtoResponse.setNome(item.getNome());
+        //     produtoResponse.setPreco(item.getPreco());
+ 
+        //     produtoResponses.add(produtoResponse);
+        // } );
+ 
     }
 
     public Produto produtoById(Long id) {
@@ -73,6 +75,7 @@ public class ProdutoService {
     public Produto cadastrarProduto(Produto produtoRequests, List<MultipartFile> files) {
         ProdutoKafka produtoKafka = new ProdutoKafka();
         produtoKafka.setNome(produtoRequests.getNome());
+
 
         Produto produto = produtoRepository.salvar(produtoRequests);
 
