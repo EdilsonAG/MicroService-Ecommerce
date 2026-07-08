@@ -65,7 +65,7 @@ public class AuthController {
     public ResponseEntity<?> registrar(@RequestBody DadosUserDTO.RegisterRequest registerRequest) {
 
         try {
-            
+
             authService.registrarUsuario(registerRequest);
             System.out.println("chegou pra registrar");
             return ResponseEntity.ok().build();
@@ -98,7 +98,7 @@ public class AuthController {
             asdf.toString();
             // System.out.println("HTTPS SESSEION SECURITY CRIADA");
             HttpSession session = request.getSession(false);
-            System.out.println("sessao:" + session.getId());
+            //System.out.println("sessao:" + session.getId());
             return ResponseEntity.ok().build();
 
         } catch (BadCredentialsException e) {
@@ -115,7 +115,7 @@ public class AuthController {
 
         HttpSession session = request.getSession(false);
         System.out.println("sessao:");
-        System.out.println(session.getId());
+        //System.out.println(session.getId());
         if (session != null) {
             try {
                 System.out.println("sessao foi invalidada");
@@ -250,7 +250,7 @@ public class AuthController {
         System.out.println("chegou pra validar");
 
         HttpSession session = request.getSession(false);
-        System.out.println(session.getId());
+        //System.out.println(session.getId());
         if (session == null)
             return ResponseEntity.status(401).build();
         
