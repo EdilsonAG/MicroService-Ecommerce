@@ -128,7 +128,9 @@ public class AuthController {
  String referer = request.getHeader("Referer");
 System.out.println(referer);
 
+// estou fazendo essa gambiarra pra ficar dinamico pra teste
  String origin = request.getHeader("Origin");
+ String urlfinal =  origin+"/callback";
 System.out.println(origin);
 
 
@@ -141,7 +143,7 @@ System.out.println(origin);
         // params.add("redirect_uri", "http://localhost:5173/AltassCookies/callback");
         // params.add("redirect_uri",
         // "https://edilsonag.github.io/AltassCookies/callback");
-        params.add("redirect_uri", urlRedirecionamento);
+        params.add("redirect_uri", urlfinal);
         params.add("code_verifier", codeVerifier);
         params.add("client_id", "web");
 
