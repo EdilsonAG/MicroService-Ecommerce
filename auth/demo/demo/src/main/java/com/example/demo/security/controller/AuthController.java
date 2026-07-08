@@ -55,6 +55,9 @@ public class AuthController {
     @Autowired
     private JwtDecoder jwtDecoder;
 
+    @Value("${token.redirecionamento.url}")
+    private String urlRedirecionamento;
+
     @Autowired
     private AuthService authService;
 
@@ -131,7 +134,7 @@ public class AuthController {
         // params.add("redirect_uri", "http://localhost:5173/AltassCookies/callback");
         // params.add("redirect_uri",
         // "https://edilsonag.github.io/AltassCookies/callback");
-        params.add("redirect_uri", "https://oauth.pstmn.io/v1/callback");
+        params.add("redirect_uri", urlRedirecionamento);
         params.add("code_verifier", codeVerifier);
         params.add("client_id", "web");
 
