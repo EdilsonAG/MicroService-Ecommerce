@@ -69,6 +69,7 @@ public class ProdutoRepository {
         ProdutoEntity produtoEntity = new ProdutoEntity();
         produtoEntity.setDescricao(produto.getDescricao());
         produtoEntity.setNome(produto.getNome());
+        produtoEntity.setPreco(produto.getPreco());
          
         
             ProdutoEntity produtoEntitySalvo = produtoRepositoryJPA.save(produtoEntity);
