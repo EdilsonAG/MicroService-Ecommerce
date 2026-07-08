@@ -65,6 +65,7 @@ public class AuthController {
     public ResponseEntity<?> registrar(@RequestBody DadosUserDTO.RegisterRequest registerRequest) {
 
         try {
+            
             authService.registrarUsuario(registerRequest);
             System.out.println("chegou pra registrar");
             return ResponseEntity.ok().build();
