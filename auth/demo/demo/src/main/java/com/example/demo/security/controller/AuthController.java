@@ -133,6 +133,9 @@ System.out.println(referer);
  String urlfinal =  origin+"/callback";
 System.out.println(origin);
 
+        if(urlfinal == null){
+            urlfinal = "http://localhost:5173";
+        }
 
         // Troca o code pelo token chamando o Authorization Server
         RestTemplate restTemplate = new RestTemplate();
