@@ -32,7 +32,7 @@ export class CarController {
                 const decoded = await jwt.decode(authHeader);
                 const idUser = decoded.usuario_id
                 const quantidade: number = req.data.quantidade;
-                const idProduto:string = req.data.idProduto
+                const idProduto:number = req.data.idProduto
                 console.log("token")
                 console.log(authHeader)
                 console.log(idProduto)
