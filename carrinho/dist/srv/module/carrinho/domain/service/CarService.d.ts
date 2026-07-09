@@ -1,7 +1,8 @@
+import { Carrinho } from "../model/Carrinho";
 export declare class CarService {
     private carRepository;
     constructor();
-    criarCIarrinho(): void;
-    addItemCarrinho(idUser: string, idProduto: string): Promise<void>;
+    buscarItensCarrinho(idUser: string): Promise<Carrinho | null>;
+    addItemCarrinho(idUser: string, idProduto: number, quantidade: number): Promise<null | undefined>;
 }
 //# sourceMappingURL=CarService.d.ts.map
