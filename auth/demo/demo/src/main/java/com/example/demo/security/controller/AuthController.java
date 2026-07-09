@@ -136,6 +136,7 @@ System.out.println(origin);
         if(origin == null){
             urlfinal = "";
             urlfinal = "http://localhost:5173/callback";
+            System.out.println(urlfinal);
         }
 
         // Troca o code pelo token chamando o Authorization Server
