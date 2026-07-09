@@ -134,6 +134,7 @@ System.out.println(referer);
 System.out.println(origin);
 
         if(origin == null){
+            urlfinal = "";
             urlfinal = "http://localhost:5173/callback";
         }
 
