@@ -27,9 +27,8 @@ async function jwt_auth(req: Request, res: Response, next: NextFunction) {
     console.log("\n\n")
     console.log("ESTA NO MIWARE")
     console.log("\n\n")
-    console.log(req)
-    console.log(res)
-   // const   = parseCookies(req.headers.cookie || '')['access_token']
+     
+    // const   = parseCookies(req.headers.cookie || '')['access_token']
     const authHeader = req.headers.authorization?.replace('Bearer ', '')
     console.log(authHeader)
     console.log(authHeader)
