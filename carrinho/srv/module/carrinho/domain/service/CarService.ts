@@ -20,7 +20,7 @@ export class CarService{
 
 
 
-    public async addItemCarrinho(idUser:string, idProduto:string, quantidade:number){
+    public async addItemCarrinho(idUser:string, idProduto:number, quantidade:number){
         
         console.log(idUser)
         console.log("CHEGOU NO addItemCarrinho")
