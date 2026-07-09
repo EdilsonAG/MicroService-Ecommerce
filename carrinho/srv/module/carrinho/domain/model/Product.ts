@@ -1,5 +1,5 @@
 export class Product {
-    private _id: string | undefined;
+    private _id: number | undefined;
     private _descricaoProduto: string | undefined;
     private _nomeProduto: string | undefined;
     private _preco: number | undefined;
@@ -10,10 +10,10 @@ export class Product {
         this._preco = value;
     }
 
-    public get id(): string | undefined {
+    public get id(): number | undefined {
         return this._id;
     }
-    public set id(value: string | undefined) {
+    public set id(value: number | undefined) {
         this._id = value;
     }
 
