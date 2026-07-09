@@ -133,8 +133,8 @@ System.out.println(referer);
  String urlfinal =  origin+"/callback";
 System.out.println(origin);
 
-        if(urlfinal == null){
-            urlfinal = "http://localhost:5173";
+        if(origin == null){
+            urlfinal = "http://localhost:5173/callback";
         }
 
         // Troca o code pelo token chamando o Authorization Server
