@@ -7,6 +7,6 @@ export declare class CarRepositoryRedis implements CarRepository {
     createCarrinho(car: Carrinho): Promise<void>;
     findCarByUserId(userId: string): Promise<Carrinho | null>;
     addItemCarrinho(userId: string, item: ItemCarrinho): Promise<void>;
-    findItemById(idItem: string): Promise<Product | null>;
+    findItemById(idItem: number): Promise<Product | null>;
 }
 //# sourceMappingURL=CarRepositoryRedis.d.ts.map

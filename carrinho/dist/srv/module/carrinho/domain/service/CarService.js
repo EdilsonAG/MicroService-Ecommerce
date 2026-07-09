@@ -9,10 +9,12 @@ class CarService {
     constructor() {
         this.carRepository = new CarRepositoryRedis_1.CarRepositoryRedis();
     }
-    criarCIarrinho() {
+    async buscarItensCarrinho(idUser) {
+        return await this.carRepository.findCarByUserId(idUser);
     }
-    async addItemCarrinho(idUser, idProduto) {
+    async addItemCarrinho(idUser, idProduto, quantidade) {
         console.log(idUser);
+        console.log("CHEGOU NO addItemCarrinho");
         const carrinhoEncontrado = await this.carRepository.findCarByUserId(idUser);
         const produtoEncontrado = await this.carRepository.findItemById(idProduto);
         if (!carrinhoEncontrado) {
@@ -23,14 +25,16 @@ class CarService {
             console.log("carrino não encontrado");
             this.carRepository.createCarrinho(carrinhoNovo);
         }
+        console.log("produtoEncontrado");
+        console.log(produtoEncontrado);
         if (carrinhoEncontrado === null || produtoEncontrado === null) {
-            throw new Error("sff");
+            return null;
         }
         console.log("adicionar item no carrinho");
         const itemCarrinho = new ItemCarrinho_1.ItemCarrinho();
-        itemCarrinho.carrinho = carrinhoEncontrado;
+        // itemCarrinho.carrinho = carrinhoEncontrado
         itemCarrinho.produto = produtoEncontrado;
-        itemCarrinho.quantidade = 5;
+        itemCarrinho.quantidade = quantidade;
         this.carRepository.addItemCarrinho(idUser, itemCarrinho);
     }
 }

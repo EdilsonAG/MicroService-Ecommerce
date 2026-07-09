@@ -34,12 +34,12 @@ export class ItemCarrinho {
     // public set carrinho(value: Carrinho | undefined) {
     //     this._carrinho = value;
     // }
-    private _id: string | undefined;
+    private _id: number | undefined;
     private _produto: Product | undefined;
     private _quantidade: number | undefined;
 
-    public get id(): string | undefined { return this._id; }
-    public set id(value: string | undefined) { this._id = value; }
+    public get id(): number | undefined { return this._id; }
+    public set id(value: number | undefined) { this._id = value; }
 
     public get produto(): Product | undefined { return this._produto; }
     public set produto(value: Product | undefined) { this._produto = value; }
