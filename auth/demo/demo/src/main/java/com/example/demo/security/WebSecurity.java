@@ -50,7 +50,7 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
                 System.out.println("NAO AUTENTICADO NO AUTHORIZE: " + authException.getMessage());
                 response.sendError(401);
             }))
-         .formLogin(Customizer.withDefaults());
+         //.formLogin(Customizer.withDefaults());
   
         
     return http.build();
