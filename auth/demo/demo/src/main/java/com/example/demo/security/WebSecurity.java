@@ -33,6 +33,7 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
         .authorizeHttpRequests( authorize -> authorize
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/login", "/error").permitAll()
                .requestMatchers("/auth/validate").permitAll() // nginx chama internamente
                .requestMatchers("/auth/login").permitAll()  
                .requestMatchers("/auth/register").permitAll()  
