@@ -29,11 +29,12 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
     System.out.println(http);
     http
     //.cors(Customizer.withDefaults())
-    .formLogin(form -> form
-    .loginPage("/login")           // sua página customizada
-    .loginProcessingUrl("/login")  // onde o POST cai
-    .permitAll()
-)
+//     .formLogin(form -> form
+//     .loginPage("/login")           // sua página customizada
+//     .loginProcessingUrl("/login")  // onde o POST cai
+//     .permitAll()
+// )
+.formLogin(Customizer.withDefaults())
     .csrf(csrf -> csrf.disable())
     
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
@@ -44,12 +45,12 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
                .requestMatchers("/auth/login").permitAll()  
                .requestMatchers("/auth/register").permitAll()  
             .anyRequest().authenticated()
-        )
-        .exceptionHandling(e -> e.authenticationEntryPoint(
-            (request, response, authException) -> {
-                System.out.println("NAO AUTENTICADO NO AUTHORIZE: " + authException.getMessage());
-                response.sendError(401);
-            }));
+        );
+        // .exceptionHandling(e -> e.authenticationEntryPoint(
+        //     (request, response, authException) -> {
+        //         System.out.println("NAO AUTENTICADO NO AUTHORIZE: " + authException.getMessage());
+        //         response.sendError(401);
+        //     }));
          //.formLogin(Customizer.withDefaults());
   
         
