@@ -29,7 +29,13 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
     System.out.println(http);
     http
     //.cors(Customizer.withDefaults())
+    .formLogin(form -> form
+    .loginPage("/login")           // sua página customizada
+    .loginProcessingUrl("/login")  // onde o POST cai
+    .permitAll()
+)
     .csrf(csrf -> csrf.disable())
+    
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
         .authorizeHttpRequests( authorize -> authorize
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
