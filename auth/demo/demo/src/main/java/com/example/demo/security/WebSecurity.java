@@ -34,7 +34,7 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
 //     .loginProcessingUrl("/login")  // onde o POST cai
 //     .permitAll()
 // )
-//.formLogin(Customizer.withDefaults())
+    .formLogin(Customizer.withDefaults())
     .csrf(csrf -> csrf.disable())
     
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
