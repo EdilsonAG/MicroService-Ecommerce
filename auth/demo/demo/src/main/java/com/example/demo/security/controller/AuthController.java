@@ -113,6 +113,7 @@ public class AuthController {
             @RequestParam String codeVerifier, HttpServletRequest request,
             HttpServletResponse response) {
 
+        System.out.println("chegou no /callback");
         HttpSession session = request.getSession(false);
         System.out.println("sessao:");
         //System.out.println(session.getId());
@@ -124,6 +125,8 @@ public class AuthController {
                 // já estava invalidated pelo Authorization Server, tudo bem
             }
         }
+                System.out.println("chegou no /callback");
+
         
  String referer = request.getHeader("Referer");
 System.out.println(referer);
