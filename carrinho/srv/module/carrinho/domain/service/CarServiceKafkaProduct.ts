@@ -21,7 +21,9 @@ export async function startConsumerProduct() {
             eachMessage: async ({ message }) => {
                 //if (!message.value) return;
 
-                
+                const TTL = 60 * 60 * 24 * 7;
+
+
                 /*
                 Quando um produto é deletado no Product Service, o producer
                 Spring envia uma mensagem com valor null para o Kafka. Isso é o padrão do Log Compaction para7
@@ -44,12 +46,9 @@ export async function startConsumerProduct() {
                     console.log(product)
                     // Set já sobrescreve se existir, cria se não existir
 
-                    await redis.set(
-                        `product:${product.id}`,
-                        JSON.stringify(product),
-                        'EX',
-                        3600
-                    );
+                    await redis.set(`product:${product.id}`,JSON.stringify(product));
+                    await redis.expire(`product:${product.id}`, TTL);
+
                 } catch (parseError) {
                     console.error('Mensagem inválida, ignorando:', message.value.toString());
                 }
