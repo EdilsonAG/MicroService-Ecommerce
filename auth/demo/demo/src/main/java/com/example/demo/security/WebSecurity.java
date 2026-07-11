@@ -44,6 +44,7 @@ public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws 
                .requestMatchers("/auth/validate").permitAll() // nginx chama internamente
                .requestMatchers("/auth/login").permitAll()  
                .requestMatchers("/auth/register").permitAll()  
+               .requestMatchers("/auth/callback").permitAll()  
             .anyRequest().authenticated()
         );
         // .exceptionHandling(e -> e.authenticationEntryPoint(
