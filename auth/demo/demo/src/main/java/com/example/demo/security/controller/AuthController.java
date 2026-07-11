@@ -266,11 +266,13 @@ System.out.println(origin);
         // System.out.println(session.getId());
         if (session == null)
             return ResponseEntity.status(401).build();
-
+        System.out.println("De fato a uma sessao");
         String token = (String) session.getAttribute("access_token");
-        if (token == null)
-            return ResponseEntity.status(401).build();
+        if (token == null){
+                        System.out.println("a uma sessao porem esta sem o token");
 
+            return ResponseEntity.status(401).build();
+        }
         try {
 
             System.out.println("antes de validar");
