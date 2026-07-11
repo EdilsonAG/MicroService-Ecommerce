@@ -265,6 +265,7 @@ System.out.println(origin);
         HttpSession session = request.getSession(false);
         // System.out.println(session.getId());
         if (session == null){
+            System.out.println("aqui não vai dar certo");
             return ResponseEntity.status(401).build();
         }
         System.out.println("De fato a uma sessao");
