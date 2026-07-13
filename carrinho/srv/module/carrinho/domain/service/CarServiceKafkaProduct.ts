@@ -30,7 +30,7 @@ export async function startConsumerProduct() {
                 sinalizar deleção
                 
                 ISSO QUE VOU ENVIAR NO SPRING
-                
+                // ainda não implementei no spring
                 kafkaTemplate.send("product.updated", product.getId().toString(), null);
                 */
                 if (message.value === null) {

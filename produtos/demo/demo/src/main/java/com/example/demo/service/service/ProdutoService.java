@@ -46,6 +46,11 @@ public class ProdutoService {
         this.fotoProdutoRepository = fotoProdutoRepository;
     }
 
+
+    public void deletarProdutoById(Long id){
+        produtoRepository.deletarProduto(id);
+    }
+
     public List<ProdutoResponse> listarProdutos() {
         //List<Produto> produto = produtoRepository.listarProdutos();
         return fotoProdutoRepository.buscarTodosComFoto();
