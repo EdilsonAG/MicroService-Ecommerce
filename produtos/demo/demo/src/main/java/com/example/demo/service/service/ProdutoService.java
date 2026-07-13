@@ -118,10 +118,12 @@ public class ProdutoService {
 
         produtoKafka.setId(produto.getId());
         produtoKafka.setDescricao(produto.getDescricao());
-
+        produtoKafka.setUrl(produtoRequests.getNome());
+        produtoKafka.setPreco(produto.getPreco());
         System.out.println(produto.getId());
         System.out.println(produto.getNome());
         System.out.println(produto.getDescricao());
+
         strategyBroker.enviarMensagem("KafkaMensagem", produtoKafka);
 
         return produto;
