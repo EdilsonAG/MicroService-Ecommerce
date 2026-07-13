@@ -22,6 +22,10 @@ public class ProdutoRepository {
         this.produtoRepositoryJPA = produtoRepositoryJPA;
     }
 
+    public void deletarProduto(Long id){
+        produtoRepositoryJPA.deleteById(id);
+    }
+
     public Produto produtoById(Long id){
         ProdutoEntity produtoEntity = produtoRepositoryJPA.findById(id).orElseThrow( ()->{ throw new IllegalArgumentException(); });
         Produto produto = new Produto();
