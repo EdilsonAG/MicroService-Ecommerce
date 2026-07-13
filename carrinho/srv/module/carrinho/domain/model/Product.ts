@@ -3,6 +3,14 @@ export class Product {
     private _descricaoProduto: string | undefined;
     private _nomeProduto: string | undefined;
     private _preco: number | undefined;
+    private _url: string | undefined;
+    public get url(): string | undefined {
+        return this._url;
+    }
+    public set url(value: string | undefined) {
+        this._url = value;
+    }
+
     public get preco(): number | undefined {
         return this._preco;
     }
