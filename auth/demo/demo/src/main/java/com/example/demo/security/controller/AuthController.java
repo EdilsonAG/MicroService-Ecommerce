@@ -133,7 +133,7 @@ System.out.println(referer);
 
 // estou fazendo essa gambiarra pra ficar dinamico pra teste
 //  String origin = request.getHeader("Origin");
-  String urlfinal = "";
+  String urlfinal = "https://altasscookies.bytefire.com.br/callback";
 // System.out.println(origin);
 
 //         if(origin == null){
@@ -150,6 +150,7 @@ System.out.println(referer);
             urlfinal = "https://altasscookies.bytefire.com.br/callback";
         }
 
+        System.out.println(urlfinal);
         // Troca o code pelo token chamando o Authorization Server
         RestTemplate restTemplate = new RestTemplate();
 
