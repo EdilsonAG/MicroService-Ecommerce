@@ -49,6 +49,10 @@ public class ProdutoService {
 
     public void deletarProdutoById(Long id){
         produtoRepository.deletarProduto(id);
+        ProdutoKafka produtoKafka = new ProdutoKafka();
+        produtoKafka.setId(id);
+
+        this.strategyBroker.deletarMensagem("KafkaMensagem", produtoKafka);
     }
 
     public List<ProdutoResponse> listarProdutos() {
