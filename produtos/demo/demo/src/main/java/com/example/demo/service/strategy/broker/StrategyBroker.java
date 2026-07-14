@@ -17,4 +17,9 @@ public class StrategyBroker {
         BrokerInterface brokerInterface = this.broker.get(broker);
         brokerInterface.enviarMensagemAoBroker(brokerInterfaceMarkup);
     }
+
+    public void deletarMensagem(String broker, BrokerInterfaceMarkup brokerInterfaceMarkup ){
+        BrokerInterface brokerInterface = this.broker.get(broker);
+        brokerInterface.deletarMensagemAoBroker(brokerInterfaceMarkup);
+    }
 }

@@ -24,4 +24,12 @@ public class KafkaMensagem implements BrokerInterface {
 
     }
 
+    @Override
+    public void deletarMensagemAoBroker(BrokerInterfaceMarkup brokerInterfaceMarkup) {
+         if (brokerInterfaceMarkup instanceof ProdutoKafka produto) {
+
+             kafka.send("product.updated", produto.getId().toString(), null);
+         }
+    }
+
 }

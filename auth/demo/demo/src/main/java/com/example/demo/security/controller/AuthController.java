@@ -111,7 +111,7 @@ public class AuthController {
     public ResponseEntity<?> callback(
             @RequestParam String code,
             @RequestParam String codeVerifier, HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response, @RequestParam String teste) {
 
         System.out.println("chegou no /callback");
         HttpSession session = request.getSession(false);
@@ -132,14 +132,22 @@ public class AuthController {
 System.out.println(referer);
 
 // estou fazendo essa gambiarra pra ficar dinamico pra teste
- String origin = request.getHeader("Origin");
- String urlfinal =  origin+"/callback";
-System.out.println(origin);
+//  String origin = request.getHeader("Origin");
+  String urlfinal = "";
+// System.out.println(origin);
 
-        if(origin == null){
-            urlfinal = "";
+//         if(origin == null){
+//             urlfinal = "";
+//             urlfinal = "http://localhost:5173/callback";
+//             System.out.println(urlfinal);
+//         }
+
+        if(teste.equals("A")){
             urlfinal = "http://localhost:5173/callback";
-            System.out.println(urlfinal);
+        }
+
+        if(teste.equals("B")){
+            urlfinal = "https://altasscookies.bytefire.com.br/callback";
         }
 
         // Troca o code pelo token chamando o Authorization Server
