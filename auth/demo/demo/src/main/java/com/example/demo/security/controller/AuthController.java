@@ -116,7 +116,7 @@ public class AuthController {
         System.out.println("chegou no /callback");
         HttpSession session = request.getSession(false);
         System.out.println("sessao:");
-        //System.out.println(session.getId());
+        // System.out.println(session.getId());
         if (session != null) {
             try {
                 System.out.println("sessao foi invalidada");
@@ -125,28 +125,27 @@ public class AuthController {
                 // já estava invalidated pelo Authorization Server, tudo bem
             }
         }
-                System.out.println("chegou no /callback");
+        System.out.println("chegou no /callback");
 
-        
- String referer = request.getHeader("Referer");
-System.out.println(referer);
+        String referer = request.getHeader("Referer");
+        System.out.println(referer);
 
-// estou fazendo essa gambiarra pra ficar dinamico pra teste
-//  String origin = request.getHeader("Origin");
-  String urlfinal = "https://altasscookies.bytefire.com.br/callback";
-// System.out.println(origin);
+        // estou fazendo essa gambiarra pra ficar dinamico pra teste
+        // String origin = request.getHeader("Origin");
+        String urlfinal = "https://altasscookies.bytefire.com.br/callback";
+        // System.out.println(origin);
 
-//         if(origin == null){
-//             urlfinal = "";
-//             urlfinal = "http://localhost:5173/callback";
-//             System.out.println(urlfinal);
-//         }
+        // if(origin == null){
+        // urlfinal = "";
+        // urlfinal = "http://localhost:5173/callback";
+        // System.out.println(urlfinal);
+        // }
 
-        if(teste.equals("A")){
+        if (teste.equals("A")) {
             urlfinal = "http://localhost:5173/callback";
         }
 
-        if(teste.equals("B")){
+        if (teste.equals("B")) {
             urlfinal = "https://altasscookies.bytefire.com.br/callback";
         }
 
@@ -276,14 +275,14 @@ System.out.println(referer);
 
         HttpSession session = request.getSession(false);
         // System.out.println(session.getId());
-        if (session == null){
+        if (session == null) {
             System.out.println("aqui não vai dar certo");
             return ResponseEntity.status(401).build();
         }
         System.out.println("De fato a uma sessao");
         String token = (String) session.getAttribute("access_token");
-        if (token == null){
-                        System.out.println("a uma sessao porem esta sem o token");
+        if (token == null) {
+            System.out.println("a uma sessao porem esta sem o token");
 
             return ResponseEntity.status(401).build();
         }
