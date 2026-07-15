@@ -65,14 +65,14 @@ public class AuthorizationServerConfigJWT {
 
                 .oidc(Customizer.withDefaults()); // Habilita OpenID Connect
 
-        http.exceptionHandling(exceptions -> exceptions
-        .defaultAuthenticationEntryPointFor(
-            new LoginUrlAuthenticationEntryPoint("https://altasscookies.bytefire.com.br/login"),
-            new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-        )
-    );
-    return http.build();
-        //return http.formLogin(Customizer.withDefaults()).build();
+    //     http.exceptionHandling(exceptions -> exceptions
+    //     .defaultAuthenticationEntryPointFor(
+    //         new LoginUrlAuthenticationEntryPoint("https://altasscookies.bytefire.com.br/login"),
+    //         new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+    //     )
+    // );
+    // return http.build();
+        return http.formLogin(Customizer.withDefaults()).build();
     }
 
      @Bean
