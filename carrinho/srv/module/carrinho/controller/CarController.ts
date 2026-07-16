@@ -24,6 +24,17 @@ export class CarController {
             }
         })
 
+        srv.on('DELETE', 'Carrinho', async (req: any) => {
+            console.log("CHEGOU NO DELETE DO CARRINHO")
+            console.log(req)
+            const authHeader = req.headers.authorization?.replace('Bearer ', '')
+                const decoded = await jwt.decode(authHeader);
+                const idUser = decoded.usuario_id
+
+                console.log(req.data)
+                console.log(req.headers.id)
+        })
+
         srv.on('addItemCarrinho', async (req: any) => {
             try {
                 console.log("\n\n\n")
