@@ -13,7 +13,7 @@ public class BrokerStrategy {
         this.broker = broker;
     }
 
-    public void enviarMensagemAoBroker(String broker, InterfaceBroker interfaceBroker ){
+    public void enviarMensagemAoBroker(String broker, InterfaceBroker interfaceBroker, String topico ){
         StrategyBrokerInterface brokerEncontrado = this.broker.get(broker);
         brokerEncontrado.enviarMensagemAoBroker(interfaceBroker);
     }

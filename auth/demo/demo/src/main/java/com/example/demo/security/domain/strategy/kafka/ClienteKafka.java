@@ -2,15 +2,17 @@ package com.example.demo.security.domain.strategy.kafka;
 
 public class ClienteKafka implements InterfaceBroker{
     
-    private String _id;
-    private String _nome;
-    private String _email;
-    public String get_id() {
+    private Long _id;
+    public Long get_id() {
         return _id;
     }
-    public void set_id(String _id) {
+    public void set_id(Long _id) {
         this._id = _id;
     }
+    private String _nome;
+    private String _email;
+
+ 
     public String get_nome() {
         return _nome;
     }
