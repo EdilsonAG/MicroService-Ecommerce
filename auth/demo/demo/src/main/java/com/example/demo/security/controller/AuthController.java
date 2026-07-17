@@ -70,7 +70,7 @@ public class AuthController {
             System.out.println("chegou pra registrar");
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email ja cadastrado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email ja cadastrado"+ e);
         }
 
     }

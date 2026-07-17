@@ -2,9 +2,12 @@ package com.example.demo.security.domain.service;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import com.example.demo.security.domain.strategy.StrategyBrokerInterface;
 import com.example.demo.security.domain.strategy.kafka.InterfaceBroker;
 
+@Component
 public class BrokerStrategy {
 
     private Map<String,StrategyBrokerInterface> broker;

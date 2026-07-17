@@ -19,12 +19,17 @@ export class CarService {
     }
 
     public async deletarItemCarrinho(idUser: string, idProduto: number) {
-        const carrinhoEncontrado:Carrinho| null = await this.carRepository.findCarByUserId(idUser)
+        const carrinhoEncontrado = await this.carRepository.findCarByUserId(idUser)
         const produtoEncontrado = await this.carRepository.findItemById(idProduto)
 
         if (!carrinhoEncontrado) {
             throw new Error("Carrinho não encontrado");
         }
+        console.log(carrinhoEncontrado)
+        console.log("ajsadfgkj")
+        console.log(carrinhoEncontrado.user)
+        if(carrinhoEncontrado.user === undefined) return null;
+        console.log(carrinhoEncontrado.user.id)
 
                  console.log("chegou depois do if")
 
@@ -32,6 +37,8 @@ export class CarService {
         carrinhoEncontrado.itensCarrinho = carrinhoEncontrado.itensCarrinho
             .filter(item => item.produto?.id !== idProduto);
  
+        console.log("CARRINHO DEPOIS DE REMOVER")
+        console.log(carrinhoEncontrado)
          console.log("chegou antes de salvar o carrinho")
          console.log(carrinhoEncontrado.user?.id)
         this.carRepository.createCarrinho(carrinhoEncontrado);
@@ -46,6 +53,7 @@ export class CarService {
         const carrinhoEncontrado = await this.carRepository.findCarByUserId(idUser)
         const produtoEncontrado = await this.carRepository.findItemById(idProduto)
 
+        console.log(carrinhoEncontrado)
 
         if (!carrinhoEncontrado) {
             const user = new ClienteEntity();

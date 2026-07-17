@@ -45,16 +45,24 @@ export async function startConsumerUser() {
 
       eachMessage: async ({ message }) => {
         if (!message.value) return;
-
-        const user: ClienteEntity = JSON.parse(message.value.toString());
-        if (!user.id) return;
+        console.log("CHEGOU ALGO AQUI USERKAFKA")
+        console.log(message.value.toString)
+        console.log(message.value)
+        const user = JSON.parse(message.value.toString());
+       
+        const cliente:ClienteEntity = new ClienteEntity();
+        cliente.id = user._id
+        cliente.email = user._email
+        cliente.nome = user._nome
         console.log(user)
-        const carrinhoExistente = await carRepositoryRedis.findCarByUserId(user.id);
+        if (!cliente.id) return;
+         const carrinhoExistente = await carRepositoryRedis.findCarByUserId(cliente.id);
         if (carrinhoExistente) return console.log("carrinho ja existe");
 
         const carrinho = new Carrinho();
-        carrinho.user = user;
-
+        carrinho.user = cliente;
+        console.log("CARRINHO")
+        console.log(carrinho)
         await carRepositoryRedis.createCarrinho(carrinho);
       }
 

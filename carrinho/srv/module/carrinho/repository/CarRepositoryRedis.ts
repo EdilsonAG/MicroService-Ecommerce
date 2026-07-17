@@ -4,6 +4,7 @@ import { RedisClient } from '../infra/redis/redisClient';
 import { ItemCarrinho } from '../domain/model/ItemCarrinho';
 import { CarRepository } from '../interface/repository/CarRepository';
 import { Product } from '../domain/model/Product';
+import { ClienteEntity } from '../domain/model/ClienteEntity';
 
 export class CarRepositoryRedis implements CarRepository {
 
@@ -82,23 +83,29 @@ export class CarRepositoryRedis implements CarRepository {
     async createCarrinho(car: Carrinho): Promise<void> {
 
         console.log("=============")
-        console.log(car.user)
-        console.log("=============")
+        console.log(car.user?.id)
+        //const asdf: string | undefined = car.user?.id
+       // console.log(asdf)
+         console.log("=============")
 
-        if (!car.user?.id) throw new Error("usuário não existente");
+       // asdfasdf:ClienteEntity = car.user;
+
+        if (!car.user) throw new Error("usuário não existente");
+
         let carrinhoId = car.id
 
         if (!carrinhoId) {
             carrinhoId = crypto.randomUUID();
-            car.id = carrinhoId;
+           // car.id = asdf;
 
         }
         const payload = {
-            _id: carrinhoId,
-            _user: car.user.id,
-            _itensCarrinho: car.itensCarrinho,
+            id: carrinhoId,
+            user: car.user,
+            itensCarrinho: car.itensCarrinho,
         };
 
+        console.log(payload)
         const redis = RedisClient.getInstance();
         const TTL = 60 * 60 * 24 * 7;
 
@@ -127,7 +134,24 @@ export class CarRepositoryRedis implements CarRepository {
         console.log("data")
         console.log(data)
         const parsed = JSON.parse(data);
-        return Object.assign(new Carrinho(), parsed); // reconstrói instância real
+        console.log("PARRSED")
+        console.log(parsed)
+        //return parsed
+         const carrinhoRetornar:Carrinho = new Carrinho()
+         carrinhoRetornar.id = parsed.id
+         carrinhoRetornar.itensCarrinho = parsed.itensCarrinho
+
+         const userRetornado:ClienteEntity = new ClienteEntity();
+         userRetornado.email = parsed.user._email
+         userRetornado.id = parsed.user._id
+         userRetornado.nome = parsed.user._nome
+
+         carrinhoRetornar.user = userRetornado
+
+         console.log("Carrinho retornar");
+         console.log(carrinhoRetornar);
+         return carrinhoRetornar;
+        //return Object.assign(new Carrinho(), parsed); // reconstrói instância real
     }
 
     async addItemCarrinho(userId: string, item: ItemCarrinho): Promise<void> {
@@ -140,8 +164,11 @@ export class CarRepositoryRedis implements CarRepository {
         if (!data) throw new Error("Carrinho não encontrado");
 
         const carrinho = JSON.parse(data);
-        carrinho._itensCarrinho.push(item);
-
+        console.log("antes")
+        console.log(carrinho)
+        carrinho.itensCarrinho.push(item);
+        console.log("depois")
+        console.log(carrinho)
         const TTL = 60 * 60 * 24 * 7;
         await redis.set(`carrinho:${carrinhoId}`, JSON.stringify(carrinho));
         await redis.expire(`carrinho:${carrinhoId}`, TTL);
