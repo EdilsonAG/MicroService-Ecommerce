@@ -35,7 +35,7 @@ export class CarService {
 
         //const carrinhoEncontrado.itensCarrinho = carrinhoEncontrado?.itensCarrinho.filter(item => item.produto?.id === idProduto)
         carrinhoEncontrado.itensCarrinho = carrinhoEncontrado.itensCarrinho
-            .filter(item => item.produto?.id !== idProduto);
+            .filter(item => item.produto?.id === idProduto);
  
         console.log("CARRINHO DEPOIS DE REMOVER")
         console.log(carrinhoEncontrado)
