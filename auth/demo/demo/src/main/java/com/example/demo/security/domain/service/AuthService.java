@@ -45,6 +45,7 @@ public class AuthService {
         clienteEntity.setSenha(userEncoded.senha());
         
         Optional<ClienteEntity> clienteEncontrado = userRepository.findByEmail(clienteEntity.getEmail());
+        System.out.println();
         if(clienteEncontrado.isPresent()){
             throw new NegocioException("Email ja cadastrado");
         }
@@ -56,7 +57,7 @@ public class AuthService {
         clienteKafka.set_email(clienteSalvo.getEmail());
         clienteKafka.set_nome(clienteSalvo.getNome());
 
-        brokerStrategy.enviarMensagemAoBroker("KafkaService", clienteKafka, "user.created");
+        brokerStrategy.enviarMensagemAoBroker("KAFKA", clienteKafka, "user.created");
        // kafkaTemplate.send("user.created", clienteEntity);
     }
 }

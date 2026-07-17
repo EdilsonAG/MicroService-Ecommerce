@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
  import com.example.demo.security.domain.strategy.StrategyBrokerInterface;
 
-@Component
+@Component("KAFKA")
 public class KafkaService implements StrategyBrokerInterface {
 
     @Autowired
@@ -14,7 +14,7 @@ public class KafkaService implements StrategyBrokerInterface {
     @Override
     public void enviarMensagemAoBroker(InterfaceBroker interfaceBroker) {
         if(interfaceBroker instanceof ClienteKafka cliente){
-
+            System.out.println(cliente.get_email());
             kafkaTemplate.send("user.created",cliente);
         }
     }
