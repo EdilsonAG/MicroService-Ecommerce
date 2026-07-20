@@ -29,9 +29,11 @@ export class CarController {
              const authHeader = req.headers.authorization?.replace('Bearer ', '')
                 const decoded = await jwt.decode(authHeader);
                 const idUser = decoded.usuario_id
+                const idProduto:number = Number(req.data.id)
 
                 console.log(req.data.id)
-                this.carService.deletarItemCarrinho(idUser,req.data.id)
+
+                this.carService.deletarItemCarrinho(idUser,idProduto)
 
                
         })

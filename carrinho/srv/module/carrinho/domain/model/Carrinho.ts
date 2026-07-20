@@ -27,4 +27,12 @@ export class Carrinho {
     public set itensCarrinho(value: Array<ItemCarrinho>) {
         this._itensCarrinho = value;
     }
+
+    toJSON() {
+        return {
+            id: this._id,
+            user: this._user,
+            itensCarrinho: this._itensCarrinho
+        };
+    }
 }

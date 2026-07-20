@@ -41,13 +41,19 @@ export async function startConsumerProduct() {
 
                 try {
                     console.log("chegou aqui")
-                    const product: Product = JSON.parse(message.value.toString());
+                    const product = JSON.parse(message.value.toString());
+                    const produto = new Product()
+                    produto.descricaoProduto = product.descricao
+                    produto.id = product.id
+                    produto.url = product.url
+                    produto.nomeProduto = product.nome
+                    produto.preco = product.preco
                     console.log("Produtos chegaram")
-                    console.log(product)
+                    console.log(produto)
                     // Set já sobrescreve se existir, cria se não existir
 
-                    await redis.set(`product:${product.id}`,JSON.stringify(product));
-                    await redis.expire(`product:${product.id}`, TTL);
+                    await redis.set(`product:${produto.id}`,JSON.stringify(produto));
+                    await redis.expire(`product:${produto.id}`, TTL);
 
                 } catch (parseError) {
                     console.error('Mensagem inválida, ignorando:', message.value.toString());

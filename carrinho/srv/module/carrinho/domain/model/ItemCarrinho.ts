@@ -46,4 +46,12 @@ export class ItemCarrinho {
 
     public get quantidade(): number | undefined { return this._quantidade; }
     public set quantidade(value: number | undefined) { this._quantidade = value; }
+
+    toJSON() {
+        return {
+            id: this._id,
+            produto: this._produto,
+            quantidade: this._quantidade
+        };
+    }
 }
