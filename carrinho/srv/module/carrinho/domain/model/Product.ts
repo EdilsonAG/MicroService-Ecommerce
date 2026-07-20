@@ -4,6 +4,19 @@ export class Product {
     private _nomeProduto: string | undefined;
     private _preco: number | undefined;
     private _url: string | undefined;
+
+     toJSON() {
+        return {
+            id: this._id,
+            nomeProduto: this._nomeProduto,
+            descricaoProduto: this._descricaoProduto,
+            preco: this._preco,
+            url: this._url
+            // ...
+        };
+    }
+
+
     public get url(): string | undefined {
         return this._url;
     }

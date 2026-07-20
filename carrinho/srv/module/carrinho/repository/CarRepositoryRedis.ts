@@ -137,6 +137,18 @@ export class CarRepositoryRedis implements CarRepository {
         console.log("PARRSED")
         console.log(parsed)
         //return parsed
+
+        console.log("PRODUTOSSSS")
+        const listaCarrinho: Array<ItemCarrinho> = []
+         
+        parsed.itensCarrinho.map(produtos => {
+             console.log(produtos)
+             console.log(produtos._nome)
+             console.log(produtos._url)
+        })
+        
+
+
          const carrinhoRetornar:Carrinho = new Carrinho()
          carrinhoRetornar.id = parsed.id
          carrinhoRetornar.itensCarrinho = parsed.itensCarrinho
@@ -182,7 +194,16 @@ export class CarRepositoryRedis implements CarRepository {
         if (!data) return null;
 
         const parsed = JSON.parse(data);
-        return Object.assign(new Product(), parsed);
+        const produto = new Product
+        console.log("PROOODUTOO")
+        console.log(parsed)
+        produto.id = parsed.id;
+        produto.descricaoProduto = parsed.descricao
+        produto.nomeProduto = parsed.nome
+        produto.url = parsed.url
+        produto.preco = parsed.preco
+
+        return produto
         // console.log
         // return JSON.parse(data) as Product
     }

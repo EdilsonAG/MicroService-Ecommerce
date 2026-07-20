@@ -33,15 +33,23 @@ export class CarService {
 
                  console.log("chegou depois do if")
 
+                 carrinhoEncontrado.toJSON()
+
         //const carrinhoEncontrado.itensCarrinho = carrinhoEncontrado?.itensCarrinho.filter(item => item.produto?.id === idProduto)
+        // carrinhoEncontrado.itensCarrinho = carrinhoEncontrado.itensCarrinho
+        //     .filter(item => item.produto?.id !== idProduto);
+
+        console.log('idProduto:', idProduto, typeof idProduto);
+        //console.log('_id item:', carrinhoEncontrado.itensCarrinho[0]._produto?._id, typeof carrinhoEncontrado.itensCarrinho[0]._produto?._id);
+
+
         carrinhoEncontrado.itensCarrinho = carrinhoEncontrado.itensCarrinho
-            .filter(item => item.produto?.id === idProduto);
- 
+            .filter(item => Number(item.produto?.id) !== Number(idProduto));
         console.log("CARRINHO DEPOIS DE REMOVER")
         console.log(carrinhoEncontrado)
          console.log("chegou antes de salvar o carrinho")
          console.log(carrinhoEncontrado.user?.id)
-        this.carRepository.createCarrinho(carrinhoEncontrado);
+        await this.carRepository.createCarrinho(carrinhoEncontrado);
     }
 
 
