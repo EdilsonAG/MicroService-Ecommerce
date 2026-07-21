@@ -24,6 +24,26 @@ export class CarController {
             }
         })
 
+        srv.on('PATCH', 'Carrinho', async(req:any) =>{
+            try {
+                const authHeader = req.headers.authorization?.replace('Bearer ', '')
+                const decoded = await jwt.decode(authHeader);
+                console.log("requisição")
+                //const asdf = JSON.stringify(req.req)
+          
+                const idUser = decoded.usuario_id
+              
+                console.log("CHEGOU NO PATCH")
+                //console.log(req)
+                const quantidade = req.data.itens.quantidade
+
+                const idProduto = req.params[0].id
+                 return this.carService.editarItemCarrinho(idUser,idProduto,quantidade)
+            } catch (error) {
+                
+            }
+        })
+
         srv.on('DELETE', 'Carrinho', async (req: any) => {
             console.log("CHEGOU NO DELETE DO CARRINHO")
              const authHeader = req.headers.authorization?.replace('Bearer ', '')
