@@ -14,6 +14,28 @@ export class CarService {
         this.carRepository = new CarRepositoryRedis()
     }
 
+    public async editarItemCarrinho(idUser: string, idProduto: number, quantidade: number) {
+        const carrinhoEncontrado = await this.carRepository.findCarByUserId(idUser)
+        await this.carRepository.findItemById(idProduto)
+
+        console.log("carrinho antes editado")
+        console.log(idProduto)
+        console.log(quantidade)
+        console.log(carrinhoEncontrado)
+
+        carrinhoEncontrado?.itensCarrinho.find(i => {
+            if (Number(i.produto?.id) === Number(idProduto)) {
+                i.quantidade  =+ quantidade
+            }
+        });
+
+        if(carrinhoEncontrado)
+        await this.carRepository.createCarrinho(carrinhoEncontrado);
+
+        console.log("CARRINHOO EDITADO")
+        console.log(carrinhoEncontrado)
+    }
+
     public async buscarItensCarrinho(idUser: string): Promise<Carrinho | null> {
         return await this.carRepository.findCarByUserId(idUser)
     }
@@ -28,12 +50,12 @@ export class CarService {
         console.log(carrinhoEncontrado)
         console.log("ajsadfgkj")
         console.log(carrinhoEncontrado.user)
-        if(carrinhoEncontrado.user === undefined) return null;
+        if (carrinhoEncontrado.user === undefined) return null;
         console.log(carrinhoEncontrado.user.id)
 
-                 console.log("chegou depois do if")
+        console.log("chegou depois do if")
 
-                 carrinhoEncontrado.toJSON()
+        carrinhoEncontrado.toJSON()
 
         //const carrinhoEncontrado.itensCarrinho = carrinhoEncontrado?.itensCarrinho.filter(item => item.produto?.id === idProduto)
         // carrinhoEncontrado.itensCarrinho = carrinhoEncontrado.itensCarrinho
@@ -47,8 +69,8 @@ export class CarService {
             .filter(item => Number(item.produto?.id) !== Number(idProduto));
         console.log("CARRINHO DEPOIS DE REMOVER")
         console.log(carrinhoEncontrado)
-         console.log("chegou antes de salvar o carrinho")
-         console.log(carrinhoEncontrado.user?.id)
+        console.log("chegou antes de salvar o carrinho")
+        console.log(carrinhoEncontrado.user?.id)
         await this.carRepository.createCarrinho(carrinhoEncontrado);
     }
 
