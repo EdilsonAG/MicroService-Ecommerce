@@ -4,7 +4,16 @@ public class Produto {
     private Long id;
     private String nome;
     private String descricao;
+     private Long preco;
 
+    
+ 
+    public Long getPreco() {
+        return preco;
+    }
+    public void setPreco(Long preco) {
+        this.preco = preco;
+    }
     
 
     public Long getId() {

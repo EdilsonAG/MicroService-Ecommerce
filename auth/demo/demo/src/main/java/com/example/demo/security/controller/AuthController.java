@@ -55,6 +55,9 @@ public class AuthController {
     @Autowired
     private JwtDecoder jwtDecoder;
 
+    @Value("${token.redirecionamento.url}")
+    private String urlRedirecionamento;
+
     @Autowired
     private AuthService authService;
 
@@ -62,11 +65,12 @@ public class AuthController {
     public ResponseEntity<?> registrar(@RequestBody DadosUserDTO.RegisterRequest registerRequest) {
 
         try {
+
             authService.registrarUsuario(registerRequest);
             System.out.println("chegou pra registrar");
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email ja cadastrado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email ja cadastrado"+ e);
         }
 
     }
@@ -94,7 +98,7 @@ public class AuthController {
             asdf.toString();
             // System.out.println("HTTPS SESSEION SECURITY CRIADA");
             HttpSession session = request.getSession(false);
-            System.out.println("sessao:" + session.getId());
+            // System.out.println("sessao:" + session.getId());
             return ResponseEntity.ok().build();
 
         } catch (BadCredentialsException e) {
@@ -107,11 +111,12 @@ public class AuthController {
     public ResponseEntity<?> callback(
             @RequestParam String code,
             @RequestParam String codeVerifier, HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response, @RequestParam String teste) {
 
+        System.out.println("chegou no /callback");
         HttpSession session = request.getSession(false);
         System.out.println("sessao:");
-        System.out.println(session.getId());
+        // System.out.println(session.getId());
         if (session != null) {
             try {
                 System.out.println("sessao foi invalidada");
@@ -120,7 +125,36 @@ public class AuthController {
                 // já estava invalidated pelo Authorization Server, tudo bem
             }
         }
+        System.out.println("chegou no /callback");
 
+        String referer = request.getHeader("Referer");
+        System.out.println(referer);
+
+        // estou fazendo essa gambiarra pra ficar dinamico pra teste
+        // String origin = request.getHeader("Origin");
+        String urlfinal = "https://altasscookies.bytefire.com.br/callback";
+        // System.out.println(origin);
+
+        // if(origin == null){
+        // urlfinal = "";
+        // urlfinal = "http://localhost:5173/callback";
+        // System.out.println(urlfinal);
+        // }
+
+        if (teste.equals("A")) {
+            urlfinal = "http://localhost:5173/callback";
+        }
+
+        if (teste.equals("B")) {
+            urlfinal = "https://altasscookies.bytefire.com.br/callback";
+        }
+
+        if (teste.equals("C")) {
+            urlfinal = "https://oauth.pstmn.io/v1/callback";
+        }
+
+       
+        System.out.println(urlfinal);
         // Troca o code pelo token chamando o Authorization Server
         RestTemplate restTemplate = new RestTemplate();
 
@@ -130,7 +164,7 @@ public class AuthController {
         // params.add("redirect_uri", "http://localhost:5173/AltassCookies/callback");
         // params.add("redirect_uri",
         // "https://edilsonag.github.io/AltassCookies/callback");
-        params.add("redirect_uri", "https://oauth.pstmn.io/v1/callback");
+        params.add("redirect_uri", urlfinal);
         params.add("code_verifier", codeVerifier);
         params.add("client_id", "web");
 
@@ -139,6 +173,10 @@ public class AuthController {
         headers.setBasicAuth("web", "web1234");
 
         System.out.println("antes de fazer o post para pegar o token");
+        System.out.println("também temos o code");
+        System.out.println(code);
+        System.out.println("e também o codeverifier");
+        System.out.println(codeVerifier);
         ResponseEntity<Map> tokenResponse = restTemplate.postForEntity(
                 // "http://localhost:8080/oauth2/token",
                 // "https://api.bytefire.com.br/oauth2/token",
@@ -241,14 +279,18 @@ public class AuthController {
         System.out.println("chegou pra validar");
 
         HttpSession session = request.getSession(false);
-        System.out.println(session.getId());
-        if (session == null)
+        // System.out.println(session.getId());
+        if (session == null) {
+            System.out.println("aqui não vai dar certo");
             return ResponseEntity.status(401).build();
-        
+        }
+        System.out.println("De fato a uma sessao");
         String token = (String) session.getAttribute("access_token");
-        if (token == null)
-            return ResponseEntity.status(401).build();
+        if (token == null) {
+            System.out.println("a uma sessao porem esta sem o token");
 
+            return ResponseEntity.status(401).build();
+        }
         try {
 
             System.out.println("antes de validar");
@@ -292,7 +334,7 @@ public class AuthController {
                 System.out.println(newAccessToken);
                 System.out.println("newRefreshToken\n\n");
                 System.out.println(newRefreshToken);
-                    
+
                 session.setAttribute("access_token", newAccessToken);
                 session.setAttribute("refresh_token", newRefreshToken);
 

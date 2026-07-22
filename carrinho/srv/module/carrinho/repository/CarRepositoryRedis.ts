@@ -1,11 +1,12 @@
 
- import { Carrinho } from '../domain/model/Carrinho';
+import { Carrinho } from '../domain/model/Carrinho';
 import { RedisClient } from '../infra/redis/redisClient';
 import { ItemCarrinho } from '../domain/model/ItemCarrinho';
 import { CarRepository } from '../interface/repository/CarRepository';
 import { Product } from '../domain/model/Product';
+import { ClienteEntity } from '../domain/model/ClienteEntity';
 
-export class CarRepositoryRedis implements CarRepository{
+export class CarRepositoryRedis implements CarRepository {
 
     private key(userId: string) {
         return `carrinho:${userId}`;
@@ -80,24 +81,38 @@ export class CarRepositoryRedis implements CarRepository{
     // }
 
     async createCarrinho(car: Carrinho): Promise<void> {
-        if (!car.user?.id) throw new Error("usuário não existente");
 
-        const carrinhoId = crypto.randomUUID();
-        car.id = carrinhoId;
+        console.log("=============")
+        console.log(car.user?.id)
+        //const asdf: string | undefined = car.user?.id
+       // console.log(asdf)
+         console.log("=============")
 
+       // asdfasdf:ClienteEntity = car.user;
+
+        if (!car.user) throw new Error("usuário não existente");
+
+        let carrinhoId = car.id
+
+        if (!carrinhoId) {
+            carrinhoId = crypto.randomUUID();
+           // car.id = asdf;
+
+        }
         const payload = {
             id: carrinhoId,
-            user_id: car.user.id,
+            user: car.user,
             itensCarrinho: car.itensCarrinho,
         };
 
+        console.log(payload)
         const redis = RedisClient.getInstance();
         const TTL = 60 * 60 * 24 * 7;
 
         await redis.set(`carrinho:${carrinhoId}`, JSON.stringify(payload));
         await redis.expire(`carrinho:${carrinhoId}`, TTL);
 
-     
+
         await redis.set(`user-carrinho:${car.user.id}`, carrinhoId);
         await redis.expire(`user-carrinho:${car.user.id}`, TTL);
     }
@@ -105,13 +120,50 @@ export class CarRepositoryRedis implements CarRepository{
     async findCarByUserId(userId: string): Promise<Carrinho | null> {
         const redis = RedisClient.getInstance();
 
+        console.log("chegou aqui no findcarByID")
+
         const carrinhoId = await redis.get(`user-carrinho:${userId}`);
         if (!carrinhoId) return null;
+
+        console.log("carrinhoId")
+        console.log(carrinhoId)
 
         const data = await redis.get(`carrinho:${carrinhoId}`);
         if (!data) return null;
 
-        return JSON.parse(data) as Carrinho;
+        console.log("data")
+        console.log(data)
+        const parsed = JSON.parse(data);
+        console.log("PARRSED")
+        console.log(parsed)
+        //return parsed
+
+        console.log("PRODUTOSSSS")
+        const listaCarrinho: Array<ItemCarrinho> = []
+         
+        parsed.itensCarrinho.map(produtos => {
+             console.log(produtos)
+             console.log(produtos._nome)
+             console.log(produtos._url)
+        })
+        
+
+
+         const carrinhoRetornar:Carrinho = new Carrinho()
+         carrinhoRetornar.id = parsed.id
+         carrinhoRetornar.itensCarrinho = parsed.itensCarrinho
+
+         const userRetornado:ClienteEntity = new ClienteEntity();
+         userRetornado.email = parsed.user._email
+         userRetornado.id = parsed.user._id
+         userRetornado.nome = parsed.user._nome
+
+         carrinhoRetornar.user = userRetornado
+
+         console.log("Carrinho retornar");
+         console.log(carrinhoRetornar);
+         return carrinhoRetornar;
+        //return Object.assign(new Carrinho(), parsed); // reconstrói instância real
     }
 
     async addItemCarrinho(userId: string, item: ItemCarrinho): Promise<void> {
@@ -124,20 +176,35 @@ export class CarRepositoryRedis implements CarRepository{
         if (!data) throw new Error("Carrinho não encontrado");
 
         const carrinho = JSON.parse(data);
+        console.log("antes")
+        console.log(carrinho)
         carrinho.itensCarrinho.push(item);
-
+        console.log("depois")
+        console.log(carrinho)
         const TTL = 60 * 60 * 24 * 7;
         await redis.set(`carrinho:${carrinhoId}`, JSON.stringify(carrinho));
         await redis.expire(`carrinho:${carrinhoId}`, TTL);
     }
 
-    async findItemById(idItem:string):Promise<Product| null>{
+    async findItemById(idItem: number): Promise<Product | null> {
 
         const redis = RedisClient.getInstance()
 
         const data = await redis.get(`product:${idItem}`);
         if (!data) return null;
 
-        return JSON.parse(data) as Product
+        const parsed = JSON.parse(data);
+        const produto = new Product
+        console.log("PROOODUTOO")
+        console.log(parsed)
+        produto.id = parsed.id;
+        produto.descricaoProduto = parsed.descricao
+        produto.nomeProduto = parsed.nome
+        produto.url = parsed.url
+        produto.preco = parsed.preco
+
+        return produto
+        // console.log
+        // return JSON.parse(data) as Product
     }
 }

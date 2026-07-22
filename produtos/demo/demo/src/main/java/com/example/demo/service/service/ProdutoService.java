@@ -13,10 +13,13 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.repository.ProdutoRepository;
+import com.example.demo.service.jpa.FotoProdutoRepository;
 import com.example.demo.service.model.FotoProduto;
 import com.example.demo.service.model.NovaFoto;
 import com.example.demo.service.model.Produto;
 import com.example.demo.service.model.ProdutoKafka;
+import com.example.demo.service.model.ProdutoRequest;
+import com.example.demo.service.model.ProdutoResponse;
 import com.example.demo.service.strategy.broker.BrokerInterfaceMarkup;
 import com.example.demo.service.strategy.broker.StrategyBroker;
 import com.example.demo.service.strategy.storage.StoragePropeties;
@@ -30,19 +33,42 @@ public class ProdutoService {
     private ProdutoRepository produtoRepository;
     private StrategyStorage strategyStorage;
     private StrategyBroker strategyBroker;
+    private FotoProdutoRepository fotoProdutoRepository;
 
     @Autowired
     private StoragePropeties storagePropeties;
 
     public ProdutoService(ProdutoRepository produtoRepository, StrategyStorage strategyStorage,
-            StrategyBroker strategyBroker) {
+            StrategyBroker strategyBroker, FotoProdutoRepository fotoProdutoRepository) {
         this.produtoRepository = produtoRepository;
         this.strategyStorage = strategyStorage;
         this.strategyBroker = strategyBroker;
+        this.fotoProdutoRepository = fotoProdutoRepository;
     }
 
-    public List<Produto> listarProdutos() {
-        return produtoRepository.listarProdutos();
+
+    public void deletarProdutoById(Long id){
+        produtoRepository.deletarProduto(id);
+        ProdutoKafka produtoKafka = new ProdutoKafka();
+        produtoKafka.setId(id);
+
+        this.strategyBroker.deletarMensagem("KafkaMensagem", produtoKafka);
+    }
+
+    public List<ProdutoResponse> listarProdutos() {
+        //List<Produto> produto = produtoRepository.listarProdutos();
+        return fotoProdutoRepository.buscarTodosComFoto();
+        // List<ProdutoResponse> produtoResponses = new ArrayList<>();
+        // produto.stream().forEach(item -> {
+        //     ProdutoResponse produtoResponse = new ProdutoResponse();
+        //     produtoResponse.setDescricao(item.getDescricao());
+        //     produtoResponse.setId(item.getId());
+        //     produtoResponse.setNome(item.getNome());
+        //     produtoResponse.setPreco(item.getPreco());
+ 
+        //     produtoResponses.add(produtoResponse);
+        // } );
+ 
     }
 
     public Produto produtoById(Long id) {
@@ -58,6 +84,7 @@ public class ProdutoService {
     public Produto cadastrarProduto(Produto produtoRequests, List<MultipartFile> files) {
         ProdutoKafka produtoKafka = new ProdutoKafka();
         produtoKafka.setNome(produtoRequests.getNome());
+
 
         Produto produto = produtoRepository.salvar(produtoRequests);
 
@@ -95,10 +122,12 @@ public class ProdutoService {
 
         produtoKafka.setId(produto.getId());
         produtoKafka.setDescricao(produto.getDescricao());
-
+        produtoKafka.setUrl(produtoRequests.getNome());
+        produtoKafka.setPreco(produtoRequests.getPreco());
         System.out.println(produto.getId());
         System.out.println(produto.getNome());
         System.out.println(produto.getDescricao());
+
         strategyBroker.enviarMensagem("KafkaMensagem", produtoKafka);
 
         return produto;

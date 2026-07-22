@@ -18,12 +18,14 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +37,8 @@ import com.example.demo.service.jpa.ProdutoRepositoryJPA;
 import com.example.demo.service.model.FotoRecuperada;
 import com.example.demo.service.model.Produto;
 import com.example.demo.service.model.ProdutoDTO;
+import com.example.demo.service.model.ProdutoRequest;
+import com.example.demo.service.model.ProdutoResponse;
 import com.example.demo.service.service.ProdutoService;
 import com.example.demo.service.strategy.storage.StrategyStorage;
  
@@ -60,8 +64,13 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id){
+        produtoService.deletarProdutoById(id);
+    }
+
     @GetMapping
-    public List<Produto> listarProduto() {
+    public List<ProdutoResponse> listarProduto() {
         return produtoService.listarProdutos();
     }
 

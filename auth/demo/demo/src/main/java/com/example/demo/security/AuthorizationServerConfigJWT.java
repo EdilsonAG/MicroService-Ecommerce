@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -37,6 +38,9 @@ import org.springframework.security.oauth2.server.authorization.settings.TokenSe
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.example.demo.security.customclaim.JwtCustomClaimsToken;
@@ -61,6 +65,13 @@ public class AuthorizationServerConfigJWT {
 
                 .oidc(Customizer.withDefaults()); // Habilita OpenID Connect
 
+    //     http.exceptionHandling(exceptions -> exceptions
+    //     .defaultAuthenticationEntryPointFor(
+    //         new LoginUrlAuthenticationEntryPoint("https://altasscookies.bytefire.com.br/login"),
+    //         new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+    //     )
+    // );
+    // return http.build();
         return http.formLogin(Customizer.withDefaults()).build();
     }
 
@@ -108,6 +119,7 @@ public class AuthorizationServerConfigJWT {
                                     AuthorizationGrantType.AUTHORIZATION_CODE)
                             .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                             .redirectUri("https://oauth.pstmn.io/v1/callback")
+                            .redirectUri("http://localhost:5173/callback")
                             .scope("read")
                             .scope("write")
                             .tokenSettings(TokenSettings.builder()

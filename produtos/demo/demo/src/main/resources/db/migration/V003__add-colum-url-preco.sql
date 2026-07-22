@@ -1,0 +1,3 @@
+ALTER TABLE produto_entity
+ADD COLUMN url VARCHAR(255),
+ADD COLUMN preco DECIMAL(10,2);

@@ -14,13 +14,48 @@ export class CarController {
         srv.on('READ', 'Carrinho', async (req: any) => {
             try {
                 // chamar use case
-                console.log("\n\n\n dados: " + req)
+                const authHeader = req.headers.authorization?.replace('Bearer ', '')
+                const decoded = await jwt.decode(authHeader);
+                const idUser = decoded.usuario_id
 
-                //const id = await this.createProductUseCase.createProduct(req.data);
-                //return { ID: id, ...req.data };
+               return this.carService.buscarItensCarrinho(idUser)
             } catch (error: any) {
                 req.error(400, error.message)
             }
+        })
+
+        srv.on('PATCH', 'Carrinho', async(req:any) =>{
+            try {
+                const authHeader = req.headers.authorization?.replace('Bearer ', '')
+                const decoded = await jwt.decode(authHeader);
+                console.log("requisição")
+                //const asdf = JSON.stringify(req.req)
+          
+                const idUser = decoded.usuario_id
+              
+                console.log("CHEGOU NO PATCH")
+                //console.log(req)
+                const quantidade = req.data.itens.quantidade
+
+                const idProduto = req.params[0].id
+                 return this.carService.editarItemCarrinho(idUser,idProduto,quantidade)
+            } catch (error) {
+                
+            }
+        })
+
+        srv.on('DELETE', 'Carrinho', async (req: any) => {
+            console.log("CHEGOU NO DELETE DO CARRINHO")
+             const authHeader = req.headers.authorization?.replace('Bearer ', '')
+                const decoded = await jwt.decode(authHeader);
+                const idUser = decoded.usuario_id
+                const idProduto:number = Number(req.data.id)
+
+                console.log(req.data.id)
+
+                this.carService.deletarItemCarrinho(idUser,idProduto)
+
+               
         })
 
         srv.on('addItemCarrinho', async (req: any) => {
@@ -30,7 +65,8 @@ export class CarController {
                 const authHeader = req.headers.authorization?.replace('Bearer ', '')
                 const decoded = await jwt.decode(authHeader);
                 const idUser = decoded.usuario_id
-                const idProduto:string = req.data.idProduto
+                const quantidade: number = req.data.quantidade;
+                const idProduto:number = req.data.idProduto
                 console.log("token")
                 console.log(authHeader)
                 console.log(idProduto)
@@ -39,7 +75,7 @@ export class CarController {
                 console.log(idUser)
                 console.log(decoded.usuario_id)
 
-                this.carService.addItemCarrinho(idUser,idProduto)
+                this.carService.addItemCarrinho(idUser,idProduto,quantidade)
 
             } catch (error) {
 

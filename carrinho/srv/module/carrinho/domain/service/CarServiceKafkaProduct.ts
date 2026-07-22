@@ -21,14 +21,16 @@ export async function startConsumerProduct() {
             eachMessage: async ({ message }) => {
                 //if (!message.value) return;
 
-                
+                const TTL = 60 * 60 * 24 * 7;
+
+
                 /*
                 Quando um produto é deletado no Product Service, o producer
                 Spring envia uma mensagem com valor null para o Kafka. Isso é o padrão do Log Compaction para7
                 sinalizar deleção
                 
                 ISSO QUE VOU ENVIAR NO SPRING
-                
+                // ainda não implementei no spring
                 kafkaTemplate.send("product.updated", product.getId().toString(), null);
                 */
                 if (message.value === null) {
@@ -39,17 +41,20 @@ export async function startConsumerProduct() {
 
                 try {
                     console.log("chegou aqui")
-                    const product: Product = JSON.parse(message.value.toString());
+                    const product = JSON.parse(message.value.toString());
+                    const produto = new Product()
+                    produto.descricaoProduto = product.descricao
+                    produto.id = product.id
+                    produto.url = product.url
+                    produto.nomeProduto = product.nome
+                    produto.preco = product.preco
                     console.log("Produtos chegaram")
-                    console.log(product)
+                    console.log(produto)
                     // Set já sobrescreve se existir, cria se não existir
 
-                    await redis.set(
-                        `product:${product.id}`,
-                        JSON.stringify(product),
-                        'EX',
-                        3600
-                    );
+                    await redis.set(`product:${produto.id}`,JSON.stringify(produto));
+                    await redis.expire(`product:${produto.id}`, TTL);
+
                 } catch (parseError) {
                     console.error('Mensagem inválida, ignorando:', message.value.toString());
                 }

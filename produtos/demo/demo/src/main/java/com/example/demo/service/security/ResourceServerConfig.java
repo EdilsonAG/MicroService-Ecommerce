@@ -41,8 +41,9 @@ public class ResourceServerConfig {
                     e.requestMatchers(HttpMethod.GET, "/produto").permitAll()
                     .requestMatchers(HttpMethod.GET, "/produto/fotos/**").permitAll()
                   //  .requestMatchers(HttpMethod.POST, "/produto").permitAll()
-                    .anyRequest()
-                    .authenticated())
+                    .anyRequest()//.permitAll()
+                    .authenticated()
+                )
                 .oauth2ResourceServer(
                         oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter2())));
 

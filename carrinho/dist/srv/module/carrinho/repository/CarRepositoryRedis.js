@@ -74,12 +74,17 @@ class CarRepositoryRedis {
     }
     async findCarByUserId(userId) {
         const redis = redisClient_1.RedisClient.getInstance();
+        console.log("chegou aqui no findcarByID");
         const carrinhoId = await redis.get(`user-carrinho:${userId}`);
         if (!carrinhoId)
             return null;
+        console.log("carrinhoId");
+        console.log(carrinhoId);
         const data = await redis.get(`carrinho:${carrinhoId}`);
         if (!data)
             return null;
+        console.log("data");
+        console.log(data);
         return JSON.parse(data);
     }
     async addItemCarrinho(userId, item) {
@@ -101,6 +106,7 @@ class CarRepositoryRedis {
         const data = await redis.get(`product:${idItem}`);
         if (!data)
             return null;
+        console.log;
         return JSON.parse(data);
     }
 }

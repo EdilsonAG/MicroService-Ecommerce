@@ -1,8 +1,29 @@
 export class Product {
-    private _id: string | undefined;
+    private _id: number | undefined;
     private _descricaoProduto: string | undefined;
     private _nomeProduto: string | undefined;
     private _preco: number | undefined;
+    private _url: string | undefined;
+
+     toJSON() {
+        return {
+            id: this._id,
+            nomeProduto: this._nomeProduto,
+            descricaoProduto: this._descricaoProduto,
+            preco: this._preco,
+            url: this._url
+            // ...
+        };
+    }
+
+
+    public get url(): string | undefined {
+        return this._url;
+    }
+    public set url(value: string | undefined) {
+        this._url = value;
+    }
+
     public get preco(): number | undefined {
         return this._preco;
     }
@@ -10,10 +31,10 @@ export class Product {
         this._preco = value;
     }
 
-    public get id(): string | undefined {
+    public get id(): number | undefined {
         return this._id;
     }
-    public set id(value: string | undefined) {
+    public set id(value: number | undefined) {
         this._id = value;
     }
 
