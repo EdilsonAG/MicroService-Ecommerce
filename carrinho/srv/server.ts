@@ -24,7 +24,7 @@ function parseCookies(cookie: string): Record<string, string> {
 }
 
 async function jwt_auth(req: Request, res: Response, next: NextFunction) {
-    console.log("\n\n")
+     
     console.log("ESTA NO MIWARE")
     console.log("\n\n")
      
