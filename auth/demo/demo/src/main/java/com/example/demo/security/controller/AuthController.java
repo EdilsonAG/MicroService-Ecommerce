@@ -153,10 +153,7 @@ public class AuthController {
             urlfinal = "https://oauth.pstmn.io/v1/callback";
         }
 
-        if (teste.equals("C")) {
-            urlfinal = "https://oauth.pstmn.io/v1/callback";
-        }
-
+       
         System.out.println(urlfinal);
         // Troca o code pelo token chamando o Authorization Server
         RestTemplate restTemplate = new RestTemplate();
