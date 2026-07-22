@@ -120,7 +120,7 @@ public class ProdutoController {
 public ResponseEntity<Resource> servirFoto(@PathVariable String nomeArquivo) throws IOException {
     Path arquivoPath = Paths.get(diretorio).resolve(nomeArquivo);
     Resource resource = new UrlResource(arquivoPath.toUri());
-
+    System.out.println("fotos");
     if (!resource.exists()) return ResponseEntity.notFound().build();
 
     String contentType = Files.probeContentType(arquivoPath);
