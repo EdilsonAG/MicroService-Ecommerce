@@ -5,6 +5,7 @@ import { CarRepositoryRedis } from "../../repository/CarRepositoryRedis";
 import { Carrinho } from "../model/Carrinho";
 import { ClienteEntity } from "../model/ClienteEntity";
 import { ItemCarrinho } from "../model/ItemCarrinho";
+import { KafkaClient } from "../../infra/kafka/KafkaClient";
 
 export class CarService {
 
@@ -25,12 +26,12 @@ export class CarService {
 
         carrinhoEncontrado?.itensCarrinho.find(i => {
             if (Number(i.produto?.id) === Number(idProduto)) {
-                i.quantidade  =+ quantidade
+                i.quantidade = + quantidade
             }
         });
 
-        if(carrinhoEncontrado)
-        await this.carRepository.createCarrinho(carrinhoEncontrado);
+        if (carrinhoEncontrado)
+            await this.carRepository.createCarrinho(carrinhoEncontrado);
 
         console.log("CARRINHOO EDITADO")
         console.log(carrinhoEncontrado)
@@ -78,8 +79,7 @@ export class CarService {
 
     public async addItemCarrinho(idUser: string, idProduto: number, quantidade: number) {
 
-        console.log(idUser)
-        console.log("CHEGOU NO addItemCarrinho")
+
         const carrinhoEncontrado = await this.carRepository.findCarByUserId(idUser)
         const produtoEncontrado = await this.carRepository.findItemById(idProduto)
 
@@ -107,6 +107,30 @@ export class CarService {
 
 
         this.carRepository.addItemCarrinho(idUser, itemCarrinho)
+
+    }
+
+    public async checkoutCar(idUser: string) {
+        const kafka = KafkaClient.getInstance()
+        const producer = kafka.producer()
+        await producer.connect();
+        const carrinhoEncontrado = await this.carRepository.findCarByUserId(idUser)
+
+        try {
+            const [meta] = await producer.send({
+                topic: 'car-checkout',
+                messages: [
+                    {
+                        key: carrinhoEncontrado?.id,
+                        value: JSON.stringify(carrinhoEncontrado),
+                    }
+                ]
+            })
+        } catch (error) {
+
+        } finally {
+            producer.disconnect()
+        }
 
     }
 }

@@ -4,5 +4,6 @@ service carrinhoService @(requires: 'authenticated-user') {
   entity Carrinho as projection on app.Carrinho;
 
   action addItemCarrinho(quantidade: Integer, idProduto: Integer) returns Carrinho;
+  action checkout();
 }
 
