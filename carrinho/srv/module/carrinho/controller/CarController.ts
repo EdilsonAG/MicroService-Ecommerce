@@ -82,7 +82,7 @@ export class CarController {
                 const decoded = await jwt.decode(authHeader);
                 const idUser = decoded.usuario_id
 
-
+                console.log("chegou no checkou")
                 this.carService.checkoutCar(idUser);
             } catch (error) {
                 

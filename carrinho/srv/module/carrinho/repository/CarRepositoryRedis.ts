@@ -81,10 +81,10 @@ export class CarRepositoryRedis implements CarRepository {
     //     return JSON.parse(data) as Carrinho;
     // }
 
-    deleteCarById(idCar: string) {
-        const redis = RedisClient.getInstance();
+    async deleteCarById(idCar: string) {
+        const redis = await RedisClient.getInstance();
 
-        redis.del(idCar)
+        await redis.del("carrinho:"+idCar)
     }
 
 

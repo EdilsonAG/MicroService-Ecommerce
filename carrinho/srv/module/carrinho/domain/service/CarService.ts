@@ -133,6 +133,8 @@ export class CarService {
             producer.disconnect()
         }
 
+        console.log("DELETAR CARRINHO")
+        console.log(carrinhoEncontrado.id)
         this.carRepository.deleteCarById(carrinhoEncontrado?.id);
 
     }
