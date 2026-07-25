@@ -113,10 +113,11 @@ export class CarService {
     public async checkoutCar(idUser: string) {
         const kafka = KafkaClient.getInstance()
         const producer = kafka.producer()
-        await producer.connect();
         const carrinhoEncontrado = await this.carRepository.findCarByUserId(idUser)
-
+        
+        if(carrinhoEncontrado?.id === undefined ){return new Error("carrinho nao encontrado")}
         try {
+            await producer.connect();
             const [meta] = await producer.send({
                 topic: 'car-checkout',
                 messages: [
@@ -127,10 +128,12 @@ export class CarService {
                 ]
             })
         } catch (error) {
-
+            return Error("não foi possivel enviar a mensagem: "+error)
         } finally {
             producer.disconnect()
         }
+
+        this.carRepository.deleteCarById(carrinhoEncontrado?.id);
 
     }
 }

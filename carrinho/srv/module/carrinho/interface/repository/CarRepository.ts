@@ -7,5 +7,5 @@ export interface CarRepository{
       addItemCarrinho(userId: string, item: ItemCarrinho): Promise<void>
       findCarByUserId(userId: string): Promise<Carrinho | null>
       findItemById(idItem:number):Promise<Product| null>
-    
+      deleteCarById(idCar: string)
 }
