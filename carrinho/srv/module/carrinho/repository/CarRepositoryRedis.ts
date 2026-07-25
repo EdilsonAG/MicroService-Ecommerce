@@ -7,6 +7,7 @@ import { Product } from '../domain/model/Product';
 import { ClienteEntity } from '../domain/model/ClienteEntity';
 
 export class CarRepositoryRedis implements CarRepository {
+    
 
     private key(userId: string) {
         return `carrinho:${userId}`;
@@ -79,6 +80,13 @@ export class CarRepositoryRedis implements CarRepository {
     //     if (!data) return null;
     //     return JSON.parse(data) as Carrinho;
     // }
+
+    deleteCarById(idCar: string) {
+        const redis = RedisClient.getInstance();
+
+        redis.del(idCar)
+    }
+
 
     async createCarrinho(car: Carrinho): Promise<void> {
 
