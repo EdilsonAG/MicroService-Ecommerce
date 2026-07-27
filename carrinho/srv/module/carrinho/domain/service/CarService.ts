@@ -128,7 +128,7 @@ export class CarService {
                 ]
             })
         } catch (error) {
-            return Error("não foi possivel enviar a mensagem: "+error)
+            return Error("não foi possivel enviar a mensagem, tente mais tarde. "+error)
         } finally {
             producer.disconnect()
         }
