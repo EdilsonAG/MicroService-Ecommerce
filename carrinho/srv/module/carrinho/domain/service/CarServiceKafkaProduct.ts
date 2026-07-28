@@ -17,6 +17,7 @@ export async function startConsumerProduct() {
         console.log("chegou2")
 
         await consumer.run({
+            
             eachMessage: async ({ message }) => {
                 //if (!message.value) return;
 
