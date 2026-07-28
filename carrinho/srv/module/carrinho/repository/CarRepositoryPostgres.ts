@@ -6,6 +6,9 @@ import { Product } from '../domain/model/Product';
 
 
 export class CarRepositoryPostgres implements CarRepository{
+    deleteCarById(idCar: string) {
+        throw new Error('Method not implemented.');
+    }
     findItemById(idItem: number): Promise<Product | null> {
         throw new Error('Method not implemented.');
     }
