@@ -11,9 +11,8 @@ public class ConsumerCarrinhoCreateOrder {
     
 
 
-    @KafkaListener(topics = "car-checkout", groupId = "group-order-car",
-                   containerFactory = "kafkaListenerContainerFactory")
-    public void consumir(String mensagem) {
+    @KafkaListener(topics = "car-checkout", groupId = "group-order-car")
+    public void consumir(CarEvent mensagem) {
         System.out.println(mensagem);
         System.out.println(mensagem);
     }
