@@ -10,8 +10,7 @@ export async function startConsumerProduct() {
 
         const redis = RedisClient.getInstance()
         const kafka = KafkaClient.getInstance()
-
-        console.log("chegou")
+ 
         const consumer = kafka.consumer({ groupId: 'group-car-product' });
         await consumer.connect();
         await consumer.subscribe({ topic: 'product.updated', fromBeginning: true });
