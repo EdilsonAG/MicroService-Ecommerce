@@ -15,5 +15,6 @@ public class ConsumerCarrinhoCreateOrder {
                    containerFactory = "kafkaListenerContainerFactory")
     public void consumir(String mensagem) {
         System.out.println(mensagem);
+        System.out.println(mensagem);
     }
 }
